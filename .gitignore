@@ -1,0 +1,34 @@
+# Rider e JetBrains
+.idea/
+*.sln.iml
+
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Configuration
+*.dbmdl
+*.psess
+*.vsp
+*.vspx
+
+# ASP.NET
+appsettings.*.json
+
+# Docker
+**/docker-compose.override.yml
+.env
+
+# Logs
+*.log
+
+# Others
+.vscode/
+*.DS_Store
+Thumbs.db
