@@ -22,8 +22,12 @@ obj/
 appsettings.*.json
 
 # Docker
-**/docker-compose.override.yml
+docker-compose.*
+!docker/docker-compose.yml
+
+# Secrets
 .env
+!.env.example
 
 # Logs
 *.log
