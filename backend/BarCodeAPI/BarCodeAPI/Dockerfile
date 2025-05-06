@@ -17,7 +17,7 @@ RUN dotnet build "BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-
 # 2. Publish Stage
 FROM build AS publish
 WORKDIR /src/BarCodeAPI
-RUN dotnet publish "BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-build /p:UseAppHost=false
+RUN dotnet publish "BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # 3. Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
