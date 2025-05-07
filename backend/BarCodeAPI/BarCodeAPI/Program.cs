@@ -9,7 +9,20 @@ namespace BarCodeAPI;
 public class Program {
     public static void Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
+        
+        // Recupera valores de ambiente (.env)
+        string host = Environment.GetEnvironmentVariable("DB_HOST") ?? throw new InvalidOperationException("DB_HOST is not set");
+        string port = Environment.GetEnvironmentVariable("DB_PORT") ?? throw new InvalidOperationException("DB_PORT is not set");
+        string database = Environment.GetEnvironmentVariable("DB_DATABASE") ?? throw new InvalidOperationException("DB_DATABASE is not set");
+        string user = Environment.GetEnvironmentVariable("DB_USER") ?? throw new InvalidOperationException("DB_USER is not set");
+        string password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new InvalidOperationException("DB_PASSWORD is not set");
+        
+        // Monta a connection string
         string connectionString = $"Server={host};Port={port};Database={database};Uid={user};Pwd={password};";
+        
+        // Registra o DbContext (Pomelo)
+        builder.Services.AddDbContext<AppDbContext>(options =>
+                                                        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
         // Add services to the container.
         builder.Services.AddControllers();
