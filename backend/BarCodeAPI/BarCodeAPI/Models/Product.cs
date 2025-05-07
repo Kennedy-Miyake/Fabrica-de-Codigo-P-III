@@ -1,3 +1,4 @@
+// ReSharper disable all
 namespace BarCodeAPI.Models;
 
 public class Product {
