@@ -1,3 +1,7 @@
+// ReSharper disable all
+
+using BarCodeAPI.Context;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 namespace BarCodeAPI;
@@ -5,6 +9,7 @@ namespace BarCodeAPI;
 public class Program {
     public static void Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
+        string connectionString = $"Server={host};Port={port};Database={database};Uid={user};Pwd={password};";
 
         // Add services to the container.
         builder.Services.AddControllers();
