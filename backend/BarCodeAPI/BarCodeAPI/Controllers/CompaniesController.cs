@@ -17,7 +17,7 @@ public class CompaniesController : ControllerBase {
 
     [HttpGet]
     public ActionResult<IEnumerable<Company>> Get() {
-        var companies = _context.Companies.ToList();
+        var companies = _context.Companies.AsNoTracking().ToList();
         if (companies is null)
             return NotFound("Empresas não encontradas...");
         return companies;
@@ -25,7 +25,7 @@ public class CompaniesController : ControllerBase {
 
     [HttpGet("{id:int}", Name = "GetCompany")]
     public ActionResult<Company> Get(int id) {
-        var company = _context.Companies.FirstOrDefault(p => p.CompanyId == id);
+        var company = _context.Companies.AsNoTracking().FirstOrDefault(p => p.CompanyId == id);
         if (company is null)
             return NotFound("Empresa não encontrada.");
         return company;
