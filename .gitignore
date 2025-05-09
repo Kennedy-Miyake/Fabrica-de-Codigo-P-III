@@ -21,6 +21,18 @@ obj/
 # ASP.NET
 appsettings.*.json
 
+# Node.js
+node_modules/
+package-lock.json
+
+# Saída de build e artefatos gerados pelo Vite
+dist/
+build/
+.vite/
+
+# Cobertura de testes
+coverage/
+
 # Docker
 docker-compose.*
 !docker/docker-compose.yml
@@ -31,6 +43,9 @@ docker-compose.*
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
 # Others
 .vscode/
