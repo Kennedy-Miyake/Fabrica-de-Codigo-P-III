@@ -52,4 +52,16 @@ public class OrdersController : ControllerBase {
         
         return Ok(order);
     }
+
+    [HttpDelete("{id:int}")]
+    public ActionResult<Order> Delete(int id) {
+        var order = _context.Orders.FirstOrDefault(p => p.OrderId == id);
+        if (order is null)
+            return NotFound("Pedido não encontrado.");
+        
+        _context.Orders.Remove(order);
+        _context.SaveChanges();
+        
+        return Ok(order);
+    }
 }
