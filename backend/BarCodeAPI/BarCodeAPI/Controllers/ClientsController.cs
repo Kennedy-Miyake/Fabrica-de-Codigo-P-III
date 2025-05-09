@@ -27,4 +27,15 @@ public class ClientsController : ControllerBase {
             return NotFound("Cliente não encontrado.");
         return client;
     }
+
+    [HttpPost]
+    public ActionResult Post(Client client) {
+        if (client is null)
+            return BadRequest();
+
+        _context.Clients.Add(client);
+        _context.SaveChanges();
+
+        return new CreatedAtRouteResult("GetClient", new { id = client.ClientId }, client);
+    }
 }
