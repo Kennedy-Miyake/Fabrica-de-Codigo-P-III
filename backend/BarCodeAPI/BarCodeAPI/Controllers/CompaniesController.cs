@@ -2,6 +2,7 @@
 using BarCodeAPI.Context;
 using BarCodeAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
@@ -39,5 +40,16 @@ public class CompaniesController : ControllerBase {
         _context.SaveChanges();
         
         return CreatedAtRoute("GetCompany", new { id = company.CompanyId }, company);
+    }
+
+    [HttpPut("{id:int}")]
+    public ActionResult Put(int id, Company company) {
+        if (id != company.CompanyId)
+            return BadRequest();
+
+        _context.Entry(company).State = EntityState.Modified;
+        _context.SaveChanges();
+        
+        return Ok(company);
     }
 }
