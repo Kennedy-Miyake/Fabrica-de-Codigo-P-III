@@ -18,6 +18,34 @@ services:
     networks:
       - barcode_net
 
+  migrate-add:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    env_file:
+      - .env
+    volumes:
+      - ../backend/BarCodeAPI/BarCodeAPI:/src
+      - ./migrate.sh:/src/migrate.sh:ro
+    working_dir: /src
+    entrypoint: ["sh", "migrate.sh", "add"]
+    depends_on:
+      - database
+    networks:
+      - barcode_net
+
+  migrate-update:
+    image: mcr.microsoft.com/dotnet/sdk:9.0
+    env_file:
+      - .env
+    volumes:
+      - ../backend/BarCodeAPI/BarCodeAPI:/src
+      - ./migrate.sh:/src/migrate.sh:ro
+    working_dir: /src
+    entrypoint: ["sh", "migrate.sh", "update"]
+    depends_on:
+      - database
+    networks:
+      - barcode_net
+
   database:
     image: mysql:8.0
     container_name: barcode_db
