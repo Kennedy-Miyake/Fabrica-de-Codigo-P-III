@@ -30,4 +30,15 @@ public class ProductsController : ControllerBase {
             return NotFound("Produto não encontrado.");
         return product;
     }
+
+    [HttpPost]
+    public ActionResult<Product> Post(Product product) {
+        if(product is null)
+            return BadRequest();
+        
+        _context.Products.Add(product);
+        _context.SaveChanges();
+        
+        return new CreatedAtRouteResult("products", new { id = product.ProductId }, product);
+    }
 }
