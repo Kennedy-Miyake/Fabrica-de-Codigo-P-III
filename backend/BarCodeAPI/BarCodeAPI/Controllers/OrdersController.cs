@@ -21,4 +21,12 @@ public class OrdersController : ControllerBase {
             return NotFound("Pedidos não encontrados...");
         return orders;
     }
+
+    [HttpGet("{id:int}", Name = "GetOrder")]
+    public ActionResult<Order> Get(int id) {
+        var order = _context.Orders.FirstOrDefault(p => p.OrderId == id);
+        if(order is null)
+            return NotFound("Pedido não encontrado.");
+        return order;
+    }
 }
