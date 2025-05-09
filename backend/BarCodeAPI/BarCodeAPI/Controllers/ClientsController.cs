@@ -50,4 +50,16 @@ public class ClientsController : ControllerBase {
 
         return Ok(client);
     }
+
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id) {
+        var client = _context.Clients.FirstOrDefault(p => p.ClientId == id);
+        if (client is null)
+            return NotFound("Cliente não encontrado...");
+
+        _context.Clients.Remove(client);
+        _context.SaveChanges();
+        
+        return Ok(client);
+    }
 }
