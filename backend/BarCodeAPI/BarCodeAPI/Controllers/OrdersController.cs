@@ -29,4 +29,15 @@ public class OrdersController : ControllerBase {
             return NotFound("Pedido não encontrado.");
         return order;
     }
+
+    [HttpPost]
+    public ActionResult<Order> Post(Order order) {
+        if (order is null)
+            return BadRequest();
+        
+        _context.Orders.Add(order);
+        _context.SaveChanges();
+        
+        return CreatedAtRoute("GetOrder", new { id = order.OrderId }, order);
+    }
 }
