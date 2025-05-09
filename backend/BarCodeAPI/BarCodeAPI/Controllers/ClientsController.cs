@@ -17,7 +17,7 @@ public class ClientsController : ControllerBase {
 
     [HttpGet]
     public ActionResult<IEnumerable<Client>> Get() {
-        var clients = _context.Clients.ToList();
+        var clients = _context.Clients.AsNoTracking().ToList();
         if (clients is null)
             return NotFound("Clientes não encontrados...");
         return clients;
@@ -25,7 +25,7 @@ public class ClientsController : ControllerBase {
 
     [HttpGet("{id:int}", Name = "GetClient")]
     public ActionResult<Client> Get(int id) {
-        var client = _context.Clients.FirstOrDefault(p => p.ClientId == id);
+        var client = _context.Clients.AsNoTracking().FirstOrDefault(p => p.ClientId == id);
         if (client is null)
             return NotFound("Cliente não encontrado.");
         return client;
