@@ -19,4 +19,12 @@ public class ClientsController : ControllerBase {
             return NotFound("Clientes não encontrados...");
         return clients;
     }
+
+    [HttpGet("{id:int}", Name = "GetClient")]
+    public ActionResult<Client> Get(int id) {
+        var client = _context.Clients.FirstOrDefault(p => p.ClientId == id);
+        if (client is null)
+            return NotFound("Cliente não encontrado.");
+        return client;
+    }
 }
