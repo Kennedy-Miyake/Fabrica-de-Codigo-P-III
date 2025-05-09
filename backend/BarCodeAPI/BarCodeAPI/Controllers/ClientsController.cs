@@ -2,6 +2,7 @@
 using BarCodeAPI.Context;
 using BarCodeAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
@@ -37,5 +38,16 @@ public class ClientsController : ControllerBase {
         _context.SaveChanges();
 
         return new CreatedAtRouteResult("GetClient", new { id = client.ClientId }, client);
+    }
+
+    [HttpPut("{id:int}")]
+    public ActionResult Put(int id, Client client) {
+        if (id != client.ClientId)
+            return BadRequest();
+
+        _context.Entry(client).State = EntityState.Modified;
+        _context.SaveChanges();
+
+        return Ok(client);
     }
 }
