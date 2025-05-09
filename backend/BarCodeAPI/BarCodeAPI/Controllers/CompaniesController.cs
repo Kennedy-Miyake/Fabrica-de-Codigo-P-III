@@ -29,4 +29,15 @@ public class CompaniesController : ControllerBase {
             return NotFound("Empresa não encontrada.");
         return company;
     }
+
+    [HttpPost]
+    public ActionResult Post(Company company) {
+        if (company is null)
+            return BadRequest();
+        
+        _context.Companies.Add(company);
+        _context.SaveChanges();
+        
+        return CreatedAtRoute("GetCompany", new { id = company.CompanyId }, company);
+    }
 }
