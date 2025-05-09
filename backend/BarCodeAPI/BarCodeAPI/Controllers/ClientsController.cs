@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
+[Route("[controller]")]
+[ApiController]
 public class ClientsController : ControllerBase {
     private readonly AppDbContext _context;
 
