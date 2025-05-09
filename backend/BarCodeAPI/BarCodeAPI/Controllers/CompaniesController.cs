@@ -52,4 +52,16 @@ public class CompaniesController : ControllerBase {
         
         return Ok(company);
     }
+
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id) {
+        var company = _context.Companies.FirstOrDefault(p => p.CompanyId == id);
+        if (company is null)
+            return NotFound("Empresa não encontrada...");
+        
+        _context.Companies.Remove(company);
+        _context.SaveChanges();
+        
+        return Ok(company);
+    }
 }
