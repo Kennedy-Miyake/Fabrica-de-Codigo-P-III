@@ -1,0 +1,40 @@
+﻿# 1. Controle de Versão
+.git
+.gitignore
+
+# 2. Configurações de ambiente / secrets
+.env
+.env.local
+secrets.dev.yaml
+values.dev.yaml
+
+# 3. IDEs / editores
+.idea/
+.vscode/
+.vs/
+
+# 4. Build outputs (.NET, JS)
+**/bin/
+**/obj/
+**/dist/
+**/build/
+
+# 5. Dependências
+**/node_modules/
+
+# 6. Logs e temporários
+*.log
+npm-debug.log
+*.tmp
+
+# 7. Arquivos de projeto .NET
+**/*.dbmdl
+**/*.jfm
+
+# 8. Docker overrides e metadados
+docker-compose.override.yml
+.dockerignore
+
+# 9. Arquivos de sistema (macOS, Windows)
+.DS_Store
+Thumbs.db
