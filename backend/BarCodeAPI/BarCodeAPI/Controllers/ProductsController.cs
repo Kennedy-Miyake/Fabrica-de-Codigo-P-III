@@ -22,4 +22,12 @@ public class ProductsController : ControllerBase {
             return NotFound("Produtos não encontrados...");
         return products;
     }
+
+    [HttpGet("{id:int}")]
+    public ActionResult<Product> Get(int id) {
+        var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+        if(product is null)
+            return NotFound("Produto não encontrado.");
+        return product;
+    }
 }
