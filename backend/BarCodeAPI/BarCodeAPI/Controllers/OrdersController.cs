@@ -17,7 +17,7 @@ public class OrdersController : ControllerBase {
 
     [HttpGet]
     public ActionResult<IEnumerable<Order>> Get() {
-        var orders = _context.Orders.AsNoTracking().ToList();
+        var orders = _context.Orders.AsNoTracking().Take(10).ToList();
         if(orders is null)
             return NotFound("Pedidos não encontrados...");
         return orders;
