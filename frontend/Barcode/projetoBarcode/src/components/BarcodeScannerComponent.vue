@@ -1,42 +1,64 @@
-<!-- src/components/BarcodeScanner.vue -->
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import Quagga from 'quagga'
 
 const cameraEl = ref(null)
 const code     = ref('')
+const error    = ref('')
 
-function start () {
+function startScanner() {
   if (!cameraEl.value) return
+
   Quagga.init(
     {
       inputStream: {
         type: 'LiveStream',
         target: cameraEl.value,
-        constraints: { facingMode: 'environment' }
+        constraints: {
+          facingMode: 'environment',
+          width:  { ideal: 800 },
+          height: { ideal: 300 }
+        }
       },
-      decoder: { readers: ['ean_reader', 'code_128_reader', 'upc_reader'] }
+      decoder: {
+        readers: ['ean_reader']  // ← somente EAN-13
+      },
+      locate: false,             // ← desativa o locate
+      frequency: 5,              // reduz leituras por segundo
+      numOfWorkers: 1            // força 1 worker, evita conflitos
     },
-    err => { if (!err) Quagga.start() }
+    err => {
+      if (err) {
+        console.error(err)
+        error.value = 'Não foi possível iniciar a câmera'
+        return
+      }
+      Quagga.start()
+    }
   )
+
   Quagga.onDetected(data => {
-    code.value = data.codeResult.code
-    Quagga.stop()
+    const result = data.codeResult
+    // só aceite se for realmente EAN-13 (13 dígitos)
+    if (result.format === 'ean_13' && result.code.length === 13) {
+      code.value = result.code
+      Quagga.stop()
+    }
   })
 }
 
-onMounted(start)
+onMounted(startScanner)
 onBeforeUnmount(() => Quagga.stop())
 </script>
 
 <template>
-  <div>
-    <div ref="cameraEl" class="relative w-full aspect-video bg-black">
-      <div class="absolute inset-y-0 left-1/2 w-px bg-red-500/60 -translate-x-1/2"></div>
-    </div>
-    <p class="mt-4 text-center font-semibold">
-      <span v-if="code">✅ Código: {{ code }}</span>
-      <span v-else>⌛ Aguardando…</span>
-    </p>
+  <div class="mx-auto w-[450px] h-[100px] bg-black rounded-md overflow-hidden relative" ref="cameraEl">
+    <div class="absolute inset-x-0 top-1/2 h-px bg-red-500/70"></div>
   </div>
+
+  <p class="mt-3 text-center font-semibold">
+    <span v-if="code">✅ Código lido: {{ code }}</span>
+    <span v-else-if="error">❌ {{ error }}</span>
+    <span v-else>⌛ Aguardando leitura…</span>
+  </p>
 </template>
