@@ -1,20 +1,13 @@
-<script setup lang="ts">
+<!-- src/components/BarcodeScanner.vue -->
+<script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import Quagga from 'quagga'
 
-/* elemento para renderizar a câmera */
-const cameraEl = ref<HTMLDivElement | null>(null)
-
-/* linha-guia visível */
-const guideEl  = ref<HTMLDivElement | null>(null)
-
-/* estado do resultado (exibido na tela ou emitido via evento) */
+const cameraEl = ref(null)
 const code     = ref('')
 
-/* inicia a câmera e o scanner */
-function startScanner() {
+function start () {
   if (!cameraEl.value) return
-
   Quagga.init(
     {
       inputStream: {
@@ -24,41 +17,26 @@ function startScanner() {
       },
       decoder: { readers: ['ean_reader', 'code_128_reader', 'upc_reader'] }
     },
-    err => {
-      if (err) return console.error(err)
-      Quagga.start()
-    }
+    err => { if (!err) Quagga.start() }
   )
-
-  /* evento disparado quando encontra código válido */
   Quagga.onDetected(data => {
     code.value = data.codeResult.code
-    // exemplo: parar e emitir evento para quem usar o componente
     Quagga.stop()
-    /* this.$emit('detected', code.value)  // se preferir emitir */
   })
 }
 
-onMounted(startScanner)
+onMounted(start)
 onBeforeUnmount(() => Quagga.stop())
 </script>
 
 <template>
-  <div class="w-full">
-    <!-- área da câmera -->
-    <div ref="cameraEl" class="relative w-full aspect-video overflow-hidden bg-black">
-      <!-- linha-guia -->
-      <div
-        ref="guideEl"
-        class="absolute left-1/2 top-1/2 h-full w-px -translate-x-1/2 -translate-y-1/2
-               bg-red-500/60 pointer-events-none"
-      ></div>
+  <div>
+    <div ref="cameraEl" class="relative w-full aspect-video bg-black">
+      <div class="absolute inset-y-0 left-1/2 w-px bg-red-500/60 -translate-x-1/2"></div>
     </div>
-
-    <!-- resultado embaixo -->
-    <p class="mt-4 text-center text-lg font-semibold">
-      <span v-if="code">✅ Código lido: {{ code }}</span>
-      <span v-else>⌛ Aguardando leitura…</span>
+    <p class="mt-4 text-center font-semibold">
+      <span v-if="code">✅ Código: {{ code }}</span>
+      <span v-else>⌛ Aguardando…</span>
     </p>
   </div>
 </template>
