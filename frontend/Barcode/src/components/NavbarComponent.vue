@@ -8,4 +8,23 @@
            
         </ul>
     </nav>
+    <SideBarComponent v-if="isSidebarOpen" @close="toggleSidebar" />
+  </div>
 </template>
+
+<script>
+import { isSidebarOpen, toggleSidebar } from '../assets/Services/SideBar.js'
+import SideBarComponent from './SideBarComponent.vue'
+
+export default {
+  components: {
+    SideBarComponent,
+  },
+  setup() {
+    return {
+      isSidebarOpen,
+      toggleSidebar,
+    }
+  },
+}
+</script>
