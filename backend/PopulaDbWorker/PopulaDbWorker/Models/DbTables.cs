@@ -18,4 +18,7 @@ public class DbTables {
     public string? GetProductAttribute(ProductAttributes attribute) {
         return productAttributes[(int)attribute];
     }
+    public void SetProductAttribute(ProductAttributes attribute, string value) {
+        productAttributes[(int)attribute] = value;
+    }
 }
