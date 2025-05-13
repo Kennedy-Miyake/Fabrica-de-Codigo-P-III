@@ -58,6 +58,18 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - barcode_net
+  
+  populadbworker:
+    build:
+      context: ../backend/PopulaDbWorker/PopulaDbWorker
+      dockerfile: Dockerfile
+    container_name: populadbworker
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - barcode_net
 
 networks:
   barcode_net:
