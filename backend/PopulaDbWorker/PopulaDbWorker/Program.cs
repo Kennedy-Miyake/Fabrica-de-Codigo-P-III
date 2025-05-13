@@ -8,7 +8,16 @@ using PopulaDbWorker.Services;
 namespace PopulaDbWorker;
 
 public class Program {
-    public static async Task Main(string[] args) {
+
+    enum ProductAttributes {
+        NAME,
+        DESCRIPTION,
+        IMAGE_URL,
+        BARCODE,
+        LENGTH_ENUM
+    }
+    
+    public static Task Main(string[] args) {
         //  Cria o HostBuilder simplificado
         var builder = Host.CreateApplicationBuilder(args);
         
@@ -32,12 +41,15 @@ public class Program {
         using var host = builder.Build();
         
         /*  - Cria um scopo DI
-            - Recupera a instância concreta do serviço BlueSoftCosmosClient */
         using var scope = host.Services.CreateScope();
         var cosmos = scope.ServiceProvider.GetRequiredService<IBlueSoftCosmosClient>();
         
         // Invoca o método assíncrono que faz GET /gtins/código-de-barras.json
         var json = await cosmos.GetProductJsonAsync("7891910000197");
-        Console.WriteLine(json ?? "Produto não encontrado ou HTTP erro.");
+        
+         List<string?> productAttributes = new List<string?>();
+         for(int i = 0; i < (int)ProductAttributes.LENGTH_ENUM; i++) productAttributes.Add((Convert.ToString((ProductAttributes)i)));
+         foreach (var attribute in productAttributes) Console.WriteLine(attribute);
+         return Task.CompletedTask;
     }
 }
