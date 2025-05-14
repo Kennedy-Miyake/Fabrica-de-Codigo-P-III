@@ -1,8 +1,7 @@
-// ReSharper disable all
-using BarCodeAPI.Models;
+// ReSharper disable All
+using BarCode.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-
-namespace BarCodeAPI.Context;
+namespace BarCode.Infrastructure.Context;
 
 public class AppDbContext : DbContext {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
