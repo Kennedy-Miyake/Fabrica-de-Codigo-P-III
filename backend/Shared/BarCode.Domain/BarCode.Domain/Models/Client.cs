@@ -1,7 +1,7 @@
 // ReSharper disable all
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace BarCodeAPI.Models;
+namespace BarCode.Domain.Models;
 
 [Table("Clients")]
 public class Client {
