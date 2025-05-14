@@ -73,7 +73,6 @@ public class ProductsController : ControllerBase
 
         _context.Entry(product).State = EntityState.Modified;
         _context.SaveChanges();
-
         return Ok(product);
     }
 
