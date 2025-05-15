@@ -23,7 +23,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ../backend/BarCodeAPI/BarCodeAPI:/src
+      - ../:/src
       - ./migrate.sh:/src/migrate.sh:ro
     working_dir: /src
     entrypoint: ["sh", "migrate.sh", "add"]
@@ -37,7 +37,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ../backend/BarCodeAPI/BarCodeAPI:/src
+      - ../:/src
       - ./migrate.sh:/src/migrate.sh:ro
     working_dir: /src
     entrypoint: ["sh", "migrate.sh", "update"]
