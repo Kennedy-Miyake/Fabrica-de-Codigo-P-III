@@ -1,7 +1,6 @@
 // ReSharper disable all
-
 using System.Text.Json.Serialization;
-using BarCodeAPI.Context;
+using BarCode.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 

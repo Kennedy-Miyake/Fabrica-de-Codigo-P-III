@@ -1,7 +1,6 @@
 // ReSharper disable all
-
-using BarCodeAPI.Context;
-using BarCodeAPI.Models;
+using BarCode.Infrastructure.Context;
+using BarCode.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
