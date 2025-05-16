@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\PopulaDbWorker\PopulaDbWorker.csproj" />
+      <ProjectReference Include="..\..\..\backend\PopulaDbWorker\PopulaDbWorker\PopulaDbWorker.csproj" />
     </ItemGroup>
 
 </Project>
