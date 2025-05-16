@@ -22,6 +22,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\backend\PopulaDbWorker\PopulaDbWorker\PopulaDbWorker.csproj" />
+      <ProjectReference Include="..\..\..\backend\Shared\BarCode.Infrastructure\BarCode.Infrastructure\BarCode.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\backend\Shared\BarCode.Domain\BarCode.Domain\BarCode.Domain.csproj" />
     </ItemGroup>
 
 </Project>
