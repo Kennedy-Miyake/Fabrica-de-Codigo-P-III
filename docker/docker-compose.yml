@@ -3,8 +3,8 @@ version: "3.9"
 services:
   api:
     build:
-      context: ../backend/BarCodeAPI/BarCodeAPI
-      dockerfile: Dockerfile
+      context: ../backend
+      dockerfile: BarCodeAPI/BarCodeAPI/Dockerfile
     container_name: barcode_api
     ports:
       - "8080:8080"

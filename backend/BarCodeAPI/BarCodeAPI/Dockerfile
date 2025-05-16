@@ -6,16 +6,19 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copia somente o .csproj e restaura
-COPY ["BarCodeAPI.csproj", "./"]
-RUN dotnet restore "BarCodeAPI.csproj"
+COPY ["BarCodeAPI/BarCodeAPI.sln", "BarCodeAPI/"]
+COPY ["BarCodeAPI/BarCodeAPI/BarCodeAPI.csproj", "BarCodeAPI/BarCodeAPI/"]
+COPY ["Shared/BarCode.Domain/BarCode.Domain/BarCode.Domain.csproj", "Shared/BarCode.Domain/BarCode.Domain/"]
+COPY ["Shared/BarCode.Infrastructure/BarCode.Infrastructure/BarCode.Infrastructure.csproj", "Shared/BarCode.Infrastructure/BarCode.Infrastructure/"]
+RUN dotnet restore "BarCodeAPI/BarCodeAPI.sln"
 
 # Copia somente o código da API
 COPY . ./
-RUN dotnet build "BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build 
+RUN dotnet build "BarCodeAPI/BarCodeAPI/BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build 
 
 # 2. Publish Stage
 FROM build AS publish
-RUN dotnet publish "BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "BarCodeAPI/BarCodeAPI/BarCodeAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # 3. Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
