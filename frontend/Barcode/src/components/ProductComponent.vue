@@ -3,10 +3,12 @@
       <p v-if="loading">Carregando...</p>
       <p v-else-if="error">{{ error }}</p>
       <div v-else-if="product">
+
         <h2>{{ product.name }}</h2>
         <p>{{ product.description }}</p>
-        <p>Código de barras: {{ product.barcode }}</p>
+        <p>Código de barras: {{ product.barCode }}</p>
       </div>
+
       <p v-else>Nenhum produto encontrado.</p>
     </div>
 </template>
@@ -31,7 +33,7 @@ export default {
   methods: {
     async fetchProduct(code) {
       try {
-        const response = await fetch(`http://localhost:8080/products/${code}`)
+        const response = await fetch(`http://localhost:8080/products/barcode/${code}`)
         if (!response.ok) throw new Error('Produto não encontrado')
         const data = await response.json()
         this.product = data
