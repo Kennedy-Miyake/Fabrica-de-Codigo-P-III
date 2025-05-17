@@ -12,7 +12,7 @@ export default function initBarcodeScanner() {
       target: document.querySelector('#camera')
     },
     locator: {
-      patchSize: 'medium', // opções: x-small, small, medium, large, x-large
+      patchSize: 'medium', 
       halfSample: true
     },
     numOfWorkers: navigator.hardwareConcurrency || 4,
