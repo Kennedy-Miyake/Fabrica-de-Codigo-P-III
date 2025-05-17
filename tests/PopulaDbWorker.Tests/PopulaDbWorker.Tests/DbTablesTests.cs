@@ -72,5 +72,14 @@ public class DbTablesTests : IClassFixture<MySqlTestContainerFixture> {
             context.Add(product);
             context.SaveChanges();
         }
+        
+        // Assert
+        using (var context = new AppDbContext(_dbContextOptions)) {
+            var productDb = context.Products.FirstOrDefault(p => p.Name == "Sample Product");
+            productDb.Should().NotBeNull();
+            productDb!.Description.Should().Be("This is a sample product.");
+            productDb!.ImageUrl.Should().Be("http://example.com/sample.jpg");
+            productDb!.BarCode.Should().Be("1234567890123");
+        }
     }
 }
