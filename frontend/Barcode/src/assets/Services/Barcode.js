@@ -34,10 +34,14 @@ export default function initBarcodeScanner() {
   Quagga.onDetected((result) => {
     const code = result.codeResult.code
 
+    //função onde verifica se codigo foi lido
     if (code !== lastCode) {
       lastCode = code
       const resultado = document.getElementById('resultado')
       if (resultado) resultado.textContent = `✅ Código lido: ${code}`
+
+      // Redireciona para o ProductComponent com o código de barras na URL
+      window.location.href = `../components/ProductComponent.vue?code=${code}`
     }
   })
 }
