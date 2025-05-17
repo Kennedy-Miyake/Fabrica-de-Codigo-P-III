@@ -5,7 +5,7 @@ using Xunit;
 using FluentAssertions;
 namespace PopulaDbWorker.Tests;
 
-public class DbTablesTests {
+public class DbTablesTests : IClassFixture<MySqlTestContainerFixture> {
     private const string SampleJson =
         """
         {
@@ -15,6 +15,12 @@ public class DbTablesTests {
             "barcode": "1234567890123"
         }
         """;
+    
+    private readonly DbContextOptions<AppDbContext> _dbContextOptions;
+    
+    public DbTablesTests(MySqlTestContainerFixture fixture) {
+        _dbContextOptions = fixture.DbContextOptions;
+    }
 
     [Fact]
     public void Fill_DbTables_With_Json_Should_Work() {
