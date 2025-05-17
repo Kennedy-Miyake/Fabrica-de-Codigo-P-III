@@ -66,5 +66,11 @@ public class DbTablesTests : IClassFixture<MySqlTestContainerFixture> {
             ImageUrl = dbTables.GetProductAttribute(ProductAttributes.IMAGE_URL)!.ToString(),
             BarCode = dbTables.GetProductAttribute(ProductAttributes.BARCODE)!.ToString()
         };
+        
+        // Act
+        using (var context = new AppDbContext(_dbContextOptions)) {
+            context.Add(product);
+            context.SaveChanges();
+        }
     }
 }
