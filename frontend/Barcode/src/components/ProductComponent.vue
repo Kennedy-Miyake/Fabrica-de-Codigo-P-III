@@ -11,3 +11,36 @@
     </div>
 </template>
   
+<script>
+export default {
+  data() {
+    return {
+      product: null,
+      loading: true,
+      error: null
+    }
+  },
+  mounted() {
+    const code = this.$route.query.code
+    if (code) {
+      this.fetchProduct(code)
+    } else {
+      this.loading = false
+    }
+  },
+  methods: {
+    async fetchProduct(code) {
+      try {
+        const response = await fetch(`http://localhost:8080/products/${code}`)
+        if (!response.ok) throw new Error('Produto não encontrado')
+        const data = await response.json()
+        this.product = data
+      } catch (e) {
+        this.error = e.message
+      } finally {
+        this.loading = false
+      }
+    }
+  }
+}
+</script>
