@@ -40,8 +40,8 @@ export default function initBarcodeScanner() {
       const resultado = document.getElementById('resultado')
       if (resultado) resultado.textContent = `✅ Código lido: ${code}`
 
-      // Redireciona para o ProductComponent com o código de barras na URL
-      window.location.href = `../components/ProductComponent.vue?code=${code}`
+      //passando barcode na url 
+      window.location.href = `/product?code=${code}`
     }
   })
 }
