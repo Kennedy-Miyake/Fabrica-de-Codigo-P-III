@@ -23,7 +23,7 @@ public class ProductsController : ControllerBase {
         return products;
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetProduct")]
     public ActionResult<Product> Get(int id) {
         var product = _context.Products.AsNoTracking().FirstOrDefault(p => p.ProductId == id);
         if(product is null)
@@ -39,7 +39,7 @@ public class ProductsController : ControllerBase {
         _context.Products.Add(product);
         _context.SaveChanges();
         
-        return new CreatedAtRouteResult("products", new { id = product.ProductId }, product);
+        return new CreatedAtRouteResult("GetProduct", new { id = product.ProductId }, product);
     }
 
     [HttpPut("{id:int}")]
