@@ -72,7 +72,7 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-    [HttpGet("barcode/{barcode}")]
+    [HttpGet("{barcode}")]
     public ActionResult<Product> GetByBarcode(string barcode)
     {
         var product = _context.Products.AsNoTracking()
@@ -84,7 +84,7 @@ public class ProductsController : ControllerBase
         return product;
     }
 
-    [HttpPut("barcode/{barcode}")]
+    [HttpPut("{barcode}")]
     public ActionResult<Product> PutByBarcode(string barcode, Product product)
     {
         var existingProduct = _context.Products
@@ -104,7 +104,7 @@ public class ProductsController : ControllerBase
         return Ok(existingProduct);
     }
 
-    [HttpDelete("barcode/{barcode}")]
+    [HttpDelete("{barcode}")]
     public ActionResult DeleteByBarcode(string barcode)
     {
         var product = _context.Products
