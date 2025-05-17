@@ -8,15 +8,18 @@ namespace BarCodeAPI.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class ProductsController : ControllerBase {
+public class ProductsController : ControllerBase
+{
     private readonly AppDbContext _context;
 
-    public ProductsController(AppDbContext context) {
+    public ProductsController(AppDbContext context)
+    {
         _context = context;
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Product>> Get() {
+    public ActionResult<IEnumerable<Product>> Get()
+    {
         var products = _context.Products.AsNoTracking().Take(10).ToList();
         if (products is null)
             return NotFound("Produtos não encontrados...");
@@ -24,41 +27,92 @@ public class ProductsController : ControllerBase {
     }
 
     [HttpGet("{id:int}")]
-    public ActionResult<Product> Get(int id) {
+    public ActionResult<Product> Get(int id)
+    {
         var product = _context.Products.AsNoTracking().FirstOrDefault(p => p.ProductId == id);
-        if(product is null)
+        if (product is null)
             return NotFound("Produto não encontrado.");
         return product;
     }
 
     [HttpPost]
-    public ActionResult<Product> Post(Product product) {
-        if(product is null)
+    public ActionResult<Product> Post(Product product)
+    {
+        if (product is null)
             return BadRequest();
-        
+
         _context.Products.Add(product);
         _context.SaveChanges();
-        
+
         return new CreatedAtRouteResult("products", new { id = product.ProductId }, product);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<Product> Put(int id, Product product) {
-        if(id != product.ProductId)
+    public ActionResult<Product> Put(int id, Product product)
+    {
+        if (id != product.ProductId)
             return BadRequest();
 
         _context.Entry(product).State = EntityState.Modified;
         _context.SaveChanges();
-        
+
         return Ok(product);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id) {
+    public ActionResult Delete(int id)
+    {
         var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-        if(product is null)
+        if (product is null)
             return NotFound("Produto não encontrado...");
-        
+
+        _context.Products.Remove(product);
+        _context.SaveChanges();
+
+        return Ok(product);
+    }
+
+    [HttpGet("barcode/{barcode}")]
+    public ActionResult<Product> GetByBarcode(string barcode)
+    {
+        var product = _context.Products.AsNoTracking()
+            .FirstOrDefault(p => p.BarCode == barcode);
+
+        if (product is null)
+            return NotFound("Produto não encontrado.");
+
+        return product;
+    }
+
+    [HttpPut("barcode/{barcode}")]
+    public ActionResult<Product> PutByBarcode(string barcode, Product product)
+    {
+        var existingProduct = _context.Products
+            .FirstOrDefault(p => p.BarCode == barcode);
+
+        if (existingProduct is null)
+            return NotFound("Produto não encontrado.");
+
+        existingProduct.Name = product.Name;
+        existingProduct.Description = product.Description;
+        existingProduct.ImageUrl = product.ImageUrl;
+        existingProduct.BarCode = product.BarCode;
+
+        _context.Entry(existingProduct).State = EntityState.Modified;
+        _context.SaveChanges();
+
+        return Ok(existingProduct);
+    }
+
+    [HttpDelete("barcode/{barcode}")]
+    public ActionResult DeleteByBarcode(string barcode)
+    {
+        var product = _context.Products
+            .FirstOrDefault(p => p.BarCode == barcode);
+
+        if (product is null)
+            return NotFound("Produto não encontrado...");
+
         _context.Products.Remove(product);
         _context.SaveChanges();
 
