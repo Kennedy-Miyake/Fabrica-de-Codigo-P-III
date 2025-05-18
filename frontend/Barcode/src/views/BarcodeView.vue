@@ -8,8 +8,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="fixed inset-0 bg-black min-h-screen w-screen flex items-center justify-center z-0">
-    <main class="font-sans min-h-[400px] w-full max-w-lg p-8 flex flex-col items-center bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-700 relative z-10">
+  <div class="flex items-center justify-center min-h-screen">
+    <main class="font-sans min-h-[400px] w-full max-w-lg p-8 flex flex-col items-center bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-700 relative">
       <h1 class="text-neutral-100 text-2xl font-semibold mb-5 text-center">📦 Leitor de Código de Barras</h1>
 
       <div id="camera" class="w-full max-w-[500px] h-[180px] mx-auto relative rounded-lg overflow-hidden mb-5 bg-black z-10">
