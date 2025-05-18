@@ -36,4 +36,9 @@ public class AutomaticRegistration : IAutomaticRegistration {
         
         return product;
     }
+
+    public void RegiterProduct(Product product) {
+        _dbContext.Add(product);
+        _dbContext.SaveChanges();
+    }
 }
