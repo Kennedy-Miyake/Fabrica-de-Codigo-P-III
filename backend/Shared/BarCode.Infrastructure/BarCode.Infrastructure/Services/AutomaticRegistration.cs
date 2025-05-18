@@ -29,5 +29,11 @@ public class AutomaticRegistration : IAutomaticRegistration {
         return product;
     }
     public Product FillInProductInformation(string barcode, CancellationToken cancellationToken = default) {
+        var json = _cosmosClient.GetProductJsonAsync(barcode, cancellationToken);
+        if (json.Result is null) throw new ArgumentException("Produto não encontrado.");
+        
+        var product = InstantiateProduct(json.Result.ToString());
+        
+        return product;
     }
 }
