@@ -26,9 +26,8 @@ public class ProductsController : ControllerBase
         return products;
     }
 
-    [HttpGet("{id:int}")]
-    public ActionResult<Product> Get(int id)
-    {
+    [HttpGet("{id:int}", Name = "GetProduct")]
+    public ActionResult<Product> Get(int id) {
         var product = _context.Products.AsNoTracking().FirstOrDefault(p => p.ProductId == id);
         if (product is null)
             return NotFound("Produto não encontrado.");
@@ -43,8 +42,8 @@ public class ProductsController : ControllerBase
 
         _context.Products.Add(product);
         _context.SaveChanges();
-
-        return new CreatedAtRouteResult("products", new { id = product.ProductId }, product);
+        
+        return new CreatedAtRouteResult("GetProduct", new { id = product.ProductId }, product);
     }
 
     [HttpPut("{id:int}")]
@@ -72,50 +71,15 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-    [HttpGet("barcode/{barcode}")]
+    [HttpGet("{barcode}")]
     public ActionResult<Product> GetByBarcode(string barcode)
     {
-        var product = _context.Products.AsNoTracking()
+        var productBarcode = _context.Products.AsNoTracking()
             .FirstOrDefault(p => p.BarCode == barcode);
 
-        if (product is null)
+        if (productBarcode is null)
             return NotFound("Produto não encontrado.");
 
-        return product;
-    }
-
-    [HttpPut("barcode/{barcode}")]
-    public ActionResult<Product> PutByBarcode(string barcode, Product product)
-    {
-        var existingProduct = _context.Products
-            .FirstOrDefault(p => p.BarCode == barcode);
-
-        if (existingProduct is null)
-            return NotFound("Produto não encontrado.");
-
-        existingProduct.Name = product.Name;
-        existingProduct.Description = product.Description;
-        existingProduct.ImageUrl = product.ImageUrl;
-        existingProduct.BarCode = product.BarCode;
-
-        _context.Entry(existingProduct).State = EntityState.Modified;
-        _context.SaveChanges();
-
-        return Ok(existingProduct);
-    }
-
-    [HttpDelete("barcode/{barcode}")]
-    public ActionResult DeleteByBarcode(string barcode)
-    {
-        var product = _context.Products
-            .FirstOrDefault(p => p.BarCode == barcode);
-
-        if (product is null)
-            return NotFound("Produto não encontrado...");
-
-        _context.Products.Remove(product);
-        _context.SaveChanges();
-
-        return Ok(product);
+        return productBarcode;
     }
 }
