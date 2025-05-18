@@ -28,17 +28,17 @@ public class AutomaticRegistration : IAutomaticRegistration {
 
         return product;
     }
-    public Product FillInProductInformation(string barcode, CancellationToken cancellationToken = default) {
-        var json = _cosmosClient.GetProductJsonAsync(barcode, cancellationToken);
-        if (json.Result is null) throw new ArgumentException("Produto não encontrado.");
+    public async Task<Product> FillInProductInformationAsync(string barcode, CancellationToken cancellationToken = default) {
+        var json = await _cosmosClient.GetProductJsonAsync(barcode, cancellationToken);
+        if (json is null) throw new ArgumentException("Produto não encontrado.");
         
-        var product = InstantiateProduct(json.Result.ToString());
+        var product = InstantiateProduct(json.ToString());
         
         return product;
     }
 
-    public void RegiterProduct(Product product) {
+    public async Task RegiterProductAsync(Product product) {
         _dbContext.Add(product);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 }
