@@ -4,5 +4,5 @@ namespace BarCode.Domain.Services;
 
 public interface IAutomaticRegistration {
     Product InstantiateProduct(string json);
-    Product FillInProductInformation(Product product);
+    Product FillInProductInformation(string barcode, CancellationToken cancellationToken = default);
 }

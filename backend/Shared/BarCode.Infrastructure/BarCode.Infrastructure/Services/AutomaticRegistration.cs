@@ -28,7 +28,6 @@ public class AutomaticRegistration : IAutomaticRegistration {
 
         return product;
     }
-    public Product FillInProductInformation(Product product) {
-        
+    public Product FillInProductInformation(string barcode, CancellationToken cancellationToken = default) {
     }
 }
