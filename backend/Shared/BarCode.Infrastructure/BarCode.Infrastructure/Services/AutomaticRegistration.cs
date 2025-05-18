@@ -23,7 +23,7 @@ public class AutomaticRegistration : IAutomaticRegistration {
                               .GetProperty("full_description")
                               .ToString(),
             ImageUrl = root.GetProperty("thumbnail").ToString(),
-            BarCode = root.GetProperty("gtin").ToString()
+            BarCode = root.GetProperty("gtin").GetRawText()
         };
 
         return product;
