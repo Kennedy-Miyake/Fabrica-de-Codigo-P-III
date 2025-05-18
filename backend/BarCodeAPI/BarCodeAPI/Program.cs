@@ -1,6 +1,9 @@
 // ReSharper disable all
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
+using BarCode.Domain.Services;
 using BarCode.Infrastructure.Context;
+using BarCode.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -23,6 +26,15 @@ public class Program {
         // Registra o DbContext (Pomelo)
         builder.Services.AddDbContext<AppDbContext>(options =>
                                                         options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        builder.Services
+               .AddScoped<IAutomaticRegistration, AutomaticRegistration>()
+               .AddHttpClient<IBlueSoftCosmosClient, BlueSoftCosmosClient>((sp, client) => {
+                   var cfg = sp.GetRequiredService<IConfiguration>();
+                   client.BaseAddress = new Uri("https://api.cosmos.bluesoft.com.br/");
+                   client.DefaultRequestHeaders.UserAgent.ParseAdd("BarCodeAPI (+https://github.com/Kennedy-Miyake/Fabrica-de-Codigo-P-III.git)");
+                   client.DefaultRequestHeaders.Add("X-Cosmos-Token", cfg["COSMOS_TOKEN"]);
+                   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+               });
 
         // Add services to the container.
         builder.Services.AddControllers().AddJsonOptions(options => {
