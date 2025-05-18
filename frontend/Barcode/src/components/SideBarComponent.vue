@@ -16,7 +16,7 @@
             <a href="#" class="block p-2 text-gray-700 hover:bg-gray-100 rounded">Cadastrar Produto</a>
           </li>
           <li>
-            <a href="#" class="block p-2 text-gray-700 hover:bg-gray-100 rounded">Scanear Codigo de Barra</a>
+            <router-link to="/" class="block p-2 text-gray-700 hover:bg-gray-100 rounded">Scanear Codigo de Barra</router-link>
           </li>
           <li>
             <a href="#" class="block p-2 text-gray-700 hover:bg-gray-100 rounded">Scanear Qr Code</a>
