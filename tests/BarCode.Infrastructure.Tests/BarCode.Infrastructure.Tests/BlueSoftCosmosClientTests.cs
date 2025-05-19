@@ -16,4 +16,14 @@ public class BlueSoftCosmosClientTests {
               .ParseAdd("BarCodeAPIUnitTests (+https://github.com/Kennedy-Miyake/Fabrica-de-Codigo-P-III.git)");
         return client;
     }
+
+    IConfiguration CreateConfiguration(string token) {
+        var inMemorySettings = new Dictionary<string, string> {
+            { "COSMOS_TOKEN", token }
+        };
+
+        return new ConfigurationBuilder()
+               .AddInMemoryCollection(inMemorySettings!)
+               .Build();
+    }
 }
