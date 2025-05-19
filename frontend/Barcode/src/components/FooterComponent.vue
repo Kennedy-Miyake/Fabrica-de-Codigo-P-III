@@ -1,7 +1,7 @@
 <template>
   <footer class="bg-[#0a1931] w-full text-white py-6 px-2 text-center relative">
     <div class="flex flex-col items-center space-y-2">
-    <p class="text-sm font-bold">{{ new Date().getFullYear() }} Barcode-Len</p>
+    <p class="text-sm font-bold">{{ new Date().getFullYear() }} BuyCode</p>
     <nav class="flex space-x-3 text-xs">
         <a href="/about" class="hover:underline">About</a>
         <span>|</span>
