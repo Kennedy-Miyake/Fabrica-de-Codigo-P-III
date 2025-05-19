@@ -45,4 +45,34 @@ public class AutomaticRegistrationTests {
         Assert.Equal("https://cdn-cosmos.bluesoft.com.br/products/7891910000197", product.ImageUrl);
         Assert.Equal("7891910000197", product.BarCode);
     }
+
+    [Fact]
+    public async Task RegisterProductAsync_ValidProduct_SavesProductToDatabase() {
+        // Arrange
+        var document = JsonDocument.Parse(sampleJson);
+        var root = document.RootElement;
+        
+        var context = CreateASAmpleDbContextWithSqlite();
+        
+        var product = new Product {
+            Name = root.GetProperty("description").ToString(),
+            Description = root.GetProperty("ncm")
+                              .GetProperty("full_description")
+                              .ToString(),
+            ImageUrl = root.GetProperty("thumbnail").ToString(),
+            BarCode = root.GetProperty("gtin").GetRawText()
+        };
+        
+        // Act
+        context.Add(product);
+        await context.SaveChangesAsync();
+        
+        // Assert
+        var savedProduct = await context.Products.FirstOrDefaultAsync(p => p.BarCode == product.BarCode);
+        Assert.NotNull(savedProduct);
+        Assert.Equal(product.Name, savedProduct.Name);
+        Assert.Equal(product.Description, savedProduct.Description);
+        Assert.Equal(product.ImageUrl, savedProduct.ImageUrl);
+        Assert.Equal(product.BarCode, savedProduct.BarCode);
+    }
 }
