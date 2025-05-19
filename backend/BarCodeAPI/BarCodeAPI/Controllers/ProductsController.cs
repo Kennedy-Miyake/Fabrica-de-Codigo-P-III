@@ -1,6 +1,7 @@
 // ReSharper disable all
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
+using BarCode.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +11,11 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly IAutomaticRegistration _automaticRegistration;
 
-    public ProductsController(AppDbContext context) {
+    public ProductsController(AppDbContext context, IAutomaticRegistration automaticRegistration) {
         _context = context;
+        _automaticRegistration = automaticRegistration;
     }
 
     [HttpGet]
@@ -29,6 +32,11 @@ public class ProductsController : ControllerBase {
         if(product is null)
             return NotFound("Produto não encontrado.");
         return product;
+    }
+
+    [HttpGet("lookup/{barcode}")]
+    public async Task<ActionResult<Product>> Lookup(string barcode) {
+        return await _automaticRegistration.FillInProductInformationAsync(barcode);
     }
 
     [HttpPost]
