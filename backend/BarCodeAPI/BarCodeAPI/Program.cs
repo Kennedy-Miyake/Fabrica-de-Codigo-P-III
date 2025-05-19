@@ -40,6 +40,18 @@ public class Program {
         builder.Services.AddControllers().AddJsonOptions(options => {
             options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
+
+        // Define a política de cors para permitir o acesso do frontend
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "AllowFrontend",
+                              policy =>
+                              {
+                                policy.WithOrigins("http://localhost:5173")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                            });
+        });
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
@@ -66,6 +78,10 @@ public class Program {
         }
 
         app.UseHttpsRedirection();
+
+        // chama a função que ativa a politica do cors
+        app.UseCors("AllowFrontend");
+
         app.UseAuthorization();
         app.MapControllers();
         app.Run();

@@ -12,7 +12,7 @@ export default function initBarcodeScanner() {
       target: document.querySelector('#camera')
     },
     locator: {
-      patchSize: 'medium', // opções: x-small, small, medium, large, x-large
+      patchSize: 'medium', 
       halfSample: true
     },
     numOfWorkers: navigator.hardwareConcurrency || 4,
@@ -34,10 +34,14 @@ export default function initBarcodeScanner() {
   Quagga.onDetected((result) => {
     const code = result.codeResult.code
 
+    //função onde verifica se codigo foi lido
     if (code !== lastCode) {
       lastCode = code
       const resultado = document.getElementById('resultado')
       if (resultado) resultado.textContent = `✅ Código lido: ${code}`
+
+      //passando barcode na url 
+      window.location.href = `/product?code=${code}`
     }
   })
 }
