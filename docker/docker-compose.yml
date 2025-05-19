@@ -3,8 +3,8 @@ version: "3.9"
 services:
   api:
     build:
-      context: ../backend/BarCodeAPI/BarCodeAPI
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: backend/BarCodeAPI/BarCodeAPI/Dockerfile
     container_name: barcode_api
     ports:
       - "8080:8080"
@@ -22,8 +22,10 @@ services:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     env_file:
       - .env
+    environment:
+      - DB_CONNECTION=${DB_CONNECTION}
     volumes:
-      - ../backend/BarCodeAPI/BarCodeAPI:/src
+      - ../:/src
       - ./migrate.sh:/src/migrate.sh:ro
     working_dir: /src
     entrypoint: ["sh", "migrate.sh", "add"]
@@ -37,7 +39,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ../backend/BarCodeAPI/BarCodeAPI:/src
+      - ../:/src
       - ./migrate.sh:/src/migrate.sh:ro
     working_dir: /src
     entrypoint: ["sh", "migrate.sh", "update"]
@@ -56,6 +58,18 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - barcode_net
+  
+  populadbworker:
+    build:
+      context: ../backend/PopulaDbWorker/PopulaDbWorker
+      dockerfile: Dockerfile
+    container_name: populadbworker
+    env_file:
+      - .env
+    depends_on:
+      - database
     networks:
       - barcode_net
 

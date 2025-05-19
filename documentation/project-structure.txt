@@ -1,0 +1,37 @@
+Fabrica-de-Código/
+	.github/
+	backend/
+		BarCodeAPI/
+			BarCodeAPI/
+				Controllers/
+				Properties/
+					launchsettings.json
+				appsettings.Development.json
+				appsettings.json
+				BarCodeAPI.csproj
+			BarCodeAPI.sln
+		Shared/
+			BarCode.Domain/
+				BarCode.Domain/
+					Models/
+					BarCode.Domain.csproj
+				BarCode.Domain.sln
+			BarCode.Infrastructure/
+				BarCode.Infrastructure/
+					Context/
+					Migrations/
+					BarCode.Infrastructure.csproj
+				BarCode.Infrastructure.sln
+	docker/
+		.env
+		docker-compose.yml
+		migrate.sh
+		Makefile
+
+	documentation/
+
+	frontend/
+
+	tests/
+	.gitignore
+	README.md

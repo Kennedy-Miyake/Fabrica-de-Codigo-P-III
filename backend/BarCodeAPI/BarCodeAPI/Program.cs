@@ -1,7 +1,9 @@
 // ReSharper disable all
-
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
-using BarCodeAPI.Context;
+using BarCode.Domain.Services;
+using BarCode.Infrastructure.Context;
+using BarCode.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -24,10 +26,31 @@ public class Program {
         // Registra o DbContext (Pomelo)
         builder.Services.AddDbContext<AppDbContext>(options =>
                                                         options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        builder.Services
+               .AddScoped<IAutomaticRegistration, AutomaticRegistration>()
+               .AddHttpClient<IBlueSoftCosmosClient, BlueSoftCosmosClient>((sp, client) => {
+                   var cfg = sp.GetRequiredService<IConfiguration>();
+                   client.BaseAddress = new Uri("https://api.cosmos.bluesoft.com.br/");
+                   client.DefaultRequestHeaders.UserAgent.ParseAdd("BarCodeAPI (+https://github.com/Kennedy-Miyake/Fabrica-de-Codigo-P-III.git)");
+                   client.DefaultRequestHeaders.Add("X-Cosmos-Token", cfg["COSMOS_TOKEN"]);
+                   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+               });
 
         // Add services to the container.
         builder.Services.AddControllers().AddJsonOptions(options => {
             options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        });
+
+        // Define a política de cors para permitir o acesso do frontend
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "AllowFrontend",
+                              policy =>
+                              {
+                                policy.WithOrigins("http://localhost:5173")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                            });
         });
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -55,6 +78,10 @@ public class Program {
         }
 
         app.UseHttpsRedirection();
+
+        // chama a função que ativa a politica do cors
+        app.UseCors("AllowFrontend");
+
         app.UseAuthorization();
         app.MapControllers();
         app.Run();

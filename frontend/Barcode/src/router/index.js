@@ -9,6 +9,11 @@ const router = createRouter({
       name: 'barcode',
       component: BarcodeView,
     },
+    {
+      path: '/product',
+      name: 'product',
+      component: () => import('../views/ProductView.vue')
+    }
   ],
 })
 
