@@ -59,9 +59,14 @@ public class ProductsController : ControllerBase
     public ActionResult<Product> Post(Product product) {
         if (product is null)
             return BadRequest();
-
-        _context.Products.Add(product);
-        _context.SaveChanges();
+        if (_barCodeValidation.IsValid(product.BarCode!) &&
+            _barCodeValidation.IsValidBrazilianBarCode(product.BarCode!)) {
+            _context.Products.Add(product);
+            _context.SaveChanges();
+        }
+        else {
+            return BadRequest("Código de barras inválido.");
+        }
         
         return new CreatedAtRouteResult("GetProduct", new { id = product.ProductId }, product);
     }
