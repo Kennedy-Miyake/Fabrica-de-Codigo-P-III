@@ -13,15 +13,18 @@ public class ProductsController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IAutomaticRegistration _automaticRegistration;
+    private readonly IBarCodeValidation _barCodeValidation;
 
-    public ProductsController(AppDbContext context, IAutomaticRegistration automaticRegistration) {
+    public ProductsController(AppDbContext context, 
+                              IAutomaticRegistration automaticRegistration, 
+                              IBarCodeValidation barCodeValidation) {
         _context = context;
         _automaticRegistration = automaticRegistration;
+        _barCodeValidation = barCodeValidation;
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Product>> Get()
-    {
+    public ActionResult<IEnumerable<Product>> Get() {
         var products = _context.Products.AsNoTracking().Take(10).ToList();
         if (products is null)
             return NotFound("Produtos não encontrados...");
@@ -42,8 +45,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{barcode}")]
-    public ActionResult<Product> GetByBarcode(string barcode)
-    {
+    public ActionResult<Product> GetByBarcode(string barcode) {
         var product = _context.Products.AsNoTracking()
             .FirstOrDefault(p => p.BarCode == barcode);
 
@@ -54,8 +56,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Product> Post(Product product)
-    {
+    public ActionResult<Product> Post(Product product) {
         if (product is null)
             return BadRequest();
 
@@ -66,8 +67,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<Product> Put(int id, Product product)
-    {
+    public ActionResult<Product> Put(int id, Product product) {
         if (id != product.ProductId)
             return BadRequest();
 
@@ -77,8 +77,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
-    {
+    public ActionResult Delete(int id) {
         var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
         if (product is null)
             return NotFound("Produto não encontrado...");
