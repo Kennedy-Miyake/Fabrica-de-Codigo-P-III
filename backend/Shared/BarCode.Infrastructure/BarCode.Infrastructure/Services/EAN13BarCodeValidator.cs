@@ -21,6 +21,13 @@ public class Ean13BarCodeValidator : IBarCodeValidation {
     }
 
     public bool IsValidBrazilianBarCode(string barcode) {
-        throw new NotImplementedException();
+        // Códigos verificadores brasileiros
+        string checkDigit = barcode.Substring(0, 3);
+        List<string> brazilianVerificationDigits = new List<string>() {
+            "789", "790"
+        };
+        
+        return brazilianVerificationDigits.Contains(checkDigit);
+
     }
 }
