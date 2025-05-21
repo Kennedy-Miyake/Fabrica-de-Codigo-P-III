@@ -15,4 +15,17 @@ public class Ean13BarCodeValidatorTests {
         // Assert
         Assert.True(isValid);
     }
+
+    [Fact]
+    public void IsValidBrazilianBarCode_ValidBrazilianBarCode_ReturnsTrue() {
+        // Arrange
+        string validBrazilianBarCode = "7891910010905";
+        var barCodeValidation = new Ean13BarCodeValidator();
+        
+        // Act
+        var isValid = barCodeValidation.IsValidBrazilianBarCode(validBrazilianBarCode);
+        
+        // Assert
+        Assert.True(isValid);
+    }
 }

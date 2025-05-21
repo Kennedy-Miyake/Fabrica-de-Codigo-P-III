@@ -19,4 +19,8 @@ public class Ean13BarCodeValidator : IBarCodeValidation {
         
         return (nextMultipleOfTen - totalSum) == checkDigit;
     }
+
+    public bool IsValidBrazilianBarCode(string barcode) {
+        throw new NotImplementedException();
+    }
 }
