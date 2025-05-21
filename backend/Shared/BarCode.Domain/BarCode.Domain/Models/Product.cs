@@ -19,4 +19,6 @@ public class Product {
     [Required]
     [StringLength(13)]
     public string? BarCode { get; set; }
+    
+    public ICollection<ProductCompany>? ProductCompanies { get; set; }
 }

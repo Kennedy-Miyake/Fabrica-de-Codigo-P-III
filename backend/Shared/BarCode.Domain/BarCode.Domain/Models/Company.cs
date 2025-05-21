@@ -22,4 +22,6 @@ public class Company {
     [Required]
     [StringLength(128)]
     public string? Address { get; set; }
+    
+    public ICollection<ProductCompany>? ProductCompanies { get; set; }
 }
