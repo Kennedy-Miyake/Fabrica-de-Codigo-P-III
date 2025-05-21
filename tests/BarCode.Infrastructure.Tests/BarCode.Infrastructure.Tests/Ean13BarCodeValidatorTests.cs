@@ -1,3 +1,5 @@
+using BarCode.Infrastructure.Services;
+
 namespace BarCode.Infrastructure.Tests;
 
 public class BarCodeValidationTests {
@@ -13,16 +15,12 @@ public class BarCodeValidationTests {
     public void IsValid_ValidBarCode_ReturnsTrue() {
         // Arrange
         string validBarCode = "7891910010905";
-        int expectedCheckDigit = 5;
+        var barCodeValidation = new BarCodeValidation();
         
         // Act
-        int checkDigit = ((Func<int>)(() => {
-            var totalSum = SumTotalMultiple(validBarCode);
-            var nextMultipleOfTen = (totalSum + 9) / 10 * 10;
-            return nextMultipleOfTen - totalSum;
-        }))();
+        bool isValid = barCodeValidation.IsValid(validBarCode);
         
         // Assert
-        Assert.Equal(expectedCheckDigit, checkDigit);
+        Assert.True(isValid);
     }
 }
