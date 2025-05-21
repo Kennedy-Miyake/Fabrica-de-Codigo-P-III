@@ -1,6 +1,8 @@
 // ReSharper disable all
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace BarCode.Domain.Models;
 
 [Table("Products")]
@@ -20,5 +22,6 @@ public class Product {
     [StringLength(13)]
     public string? BarCode { get; set; }
     
+    [JsonIgnore]
     public ICollection<ProductCompany>? ProductCompanies { get; set; }
 }
