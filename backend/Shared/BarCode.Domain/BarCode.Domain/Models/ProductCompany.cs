@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BarCode.Domain.Models;
 
@@ -10,10 +11,12 @@ public class ProductCompany {
     
     [ForeignKey("ProductId")]
     public int ProductId { get; set; }
+    [JsonIgnore]
     public Product? Product { get; set; }
     
     [ForeignKey("CompanyId")]
     public int CompanyId { get; set; }
+    [JsonIgnore]
     public Company? Company { get; set; }
     
     [Required]
