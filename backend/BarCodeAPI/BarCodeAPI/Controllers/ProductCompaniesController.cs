@@ -29,6 +29,18 @@ public class ProductCompaniesController : ControllerBase {
         return Ok(products);
     }
 
+    [HttpGet("product/{productId:int}")]
+    public ActionResult<ProductCompanyDTO> Get(int companyId, int productId) {
+        var product = _context.ProductCompanies
+                              .AsNoTracking()
+                              .FirstOrDefault(pc => pc.CompanyId == companyId && pc.ProductId == productId);
+
+        if (product is null)
+            return NotFound("Produto não encontrado.");
+
+        return new ProductCompanyDTO(product.ProductCompanyId, product.ProductId, product.CompanyId, product.Price, product.Stock);
+    }
+
     [HttpPost("product")]
     public ActionResult Post(int companyId, [FromBody] ProductCompanyDTO? dto) {
         if (dto is null || dto.CompanyId != companyId)
