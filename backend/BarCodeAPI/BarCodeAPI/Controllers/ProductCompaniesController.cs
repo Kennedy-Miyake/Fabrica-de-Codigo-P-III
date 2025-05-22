@@ -14,4 +14,18 @@ public class ProductCompaniesController : ControllerBase {
     public ProductCompaniesController(AppDbContext context) {
         _context = context;
     }
+
+    [HttpGet("products", Name = "GetProductCompanies")]
+    public ActionResult<IEnumerable<Product>> Get(int companyId) {
+        var products = _context.ProductCompanies
+                           .AsNoTracking()
+                           .Where(pc => pc.CompanyId == companyId)
+                           .Include(pc => pc.Product)
+                           .Take(10)
+                           .ToList();
+        
+        if (products is null)
+            return NotFound("Produtos não encontrados...");
+        return Ok(products);
+    }
 }
