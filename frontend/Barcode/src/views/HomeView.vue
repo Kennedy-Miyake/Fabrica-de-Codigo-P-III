@@ -10,6 +10,9 @@
   <p class="text-lg sm:text-xl text-center max-w-2xl leading-relaxed">
     Compare preços, leia códigos de barras e encontre a melhor oferta sem complicação.
   </p>
+  <router-link to='/scanner' class="mt-8 inline-block rounded-2xl px-6 py-3 font-semibold bg-[#4facfe] hover:bg-[#8ce7fe] transition-colors shadow-md">
+    Começar Agora
+  </router-link>
 </section>
 </template>
 
