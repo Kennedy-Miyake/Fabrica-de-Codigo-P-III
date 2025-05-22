@@ -18,7 +18,7 @@ public class ProductCompany {
     
     [Required]
     [Column(TypeName = "decimal(18,2)")]
-    public int Price { get; set; }
+    public decimal Price { get; set; }
     [Required]
     public int Stock { get; set; }
 }
