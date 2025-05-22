@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
-[Route("[controller]")]
+[Route("api/v1")]
 [ApiController]
 public class ProductsController : ControllerBase
 {
@@ -23,7 +23,7 @@ public class ProductsController : ControllerBase
         _barCodeValidation = barCodeValidation;
     }
 
-    [HttpGet]
+    [HttpGet("products")]
     public ActionResult<IEnumerable<Product>> Get() {
         var products = _context.Products.AsNoTracking().Take(10).ToList();
         if (products is null)
@@ -31,7 +31,7 @@ public class ProductsController : ControllerBase
         return products;
     }
 
-    [HttpGet("{id:int}", Name = "GetProduct")]
+    [HttpGet("product/{id:int}", Name = "GetProduct")]
     public ActionResult<Product> Get(int id) {
         var product = _context.Products.AsNoTracking().FirstOrDefault(p => p.ProductId == id);
         if (product is null)
@@ -44,7 +44,7 @@ public class ProductsController : ControllerBase
         return await _automaticRegistration.FillInProductInformationAsync(barcode);
     }
 
-    [HttpGet("{barcode}")]
+    [HttpGet("product/{barcode}")]
     public ActionResult<Product> GetByBarcode(string barcode) {
         var product = _context.Products.AsNoTracking()
             .FirstOrDefault(p => p.BarCode == barcode);
@@ -55,7 +55,7 @@ public class ProductsController : ControllerBase
         return product;
     }
 
-    [HttpPost]
+    [HttpPost("product")]
     public ActionResult<Product> Post(Product product) {
         if (product is null)
             return BadRequest();
@@ -71,7 +71,7 @@ public class ProductsController : ControllerBase
         return new CreatedAtRouteResult("GetProduct", new { id = product.ProductId }, product);
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("product/{id:int}")]
     public ActionResult<Product> Put(int id, Product product) {
         if (id != product.ProductId)
             return BadRequest();
@@ -81,7 +81,7 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("product/{id:int}")]
     public ActionResult Delete(int id) {
         var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
         if (product is null)
