@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
-[Route("[controller]")]
+[Route("api/v1")]
 [ApiController]
 public class OrdersController : ControllerBase {
     private readonly AppDbContext _context;
@@ -15,7 +15,7 @@ public class OrdersController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("orders")]
     public ActionResult<IEnumerable<Order>> Get() {
         var orders = _context.Orders.AsNoTracking().Take(10).ToList();
         if(orders is null)
@@ -23,7 +23,7 @@ public class OrdersController : ControllerBase {
         return orders;
     }
 
-    [HttpGet("{id:int}", Name = "GetOrder")]
+    [HttpGet("order/{id:int}", Name = "GetOrder")]
     public ActionResult<Order> Get(int id) {
         var order = _context.Orders.AsNoTracking().FirstOrDefault(p => p.OrderId == id);
         if(order is null)
@@ -31,7 +31,7 @@ public class OrdersController : ControllerBase {
         return order;
     }
 
-    [HttpPost]
+    [HttpPost("order")]
     public ActionResult<Order> Post(Order order) {
         if (order is null)
             return BadRequest();
@@ -42,7 +42,7 @@ public class OrdersController : ControllerBase {
         return CreatedAtRoute("GetOrder", new { id = order.OrderId }, order);
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("order/{id:int}")]
     public ActionResult<Order> Put(int id, Order order) {
         if (id != order.OrderId)
             return BadRequest();
@@ -53,7 +53,7 @@ public class OrdersController : ControllerBase {
         return Ok(order);
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("order/{id:int}")]
     public ActionResult<Order> Delete(int id) {
         var order = _context.Orders.FirstOrDefault(p => p.OrderId == id);
         if (order is null)

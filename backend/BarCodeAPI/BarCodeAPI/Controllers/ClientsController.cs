@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
-[Route("[controller]")]
+[Route("api/v1")]
 [ApiController]
 public class ClientsController : ControllerBase {
     private readonly AppDbContext _context;
@@ -15,7 +15,7 @@ public class ClientsController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("clients")]
     public ActionResult<IEnumerable<Client>> Get() {
         var clients = _context.Clients.AsNoTracking().Take(10).ToList();
         if (clients is null)
@@ -23,7 +23,7 @@ public class ClientsController : ControllerBase {
         return clients;
     }
 
-    [HttpGet("{id:int}", Name = "GetClient")]
+    [HttpGet("client/{id:int}", Name = "GetClient")]
     public ActionResult<Client> Get(int id) {
         var client = _context.Clients.AsNoTracking().FirstOrDefault(p => p.ClientId == id);
         if (client is null)
@@ -31,7 +31,7 @@ public class ClientsController : ControllerBase {
         return client;
     }
 
-    [HttpPost]
+    [HttpPost("client")]
     public ActionResult Post(Client client) {
         if (client is null)
             return BadRequest();
@@ -42,7 +42,7 @@ public class ClientsController : ControllerBase {
         return new CreatedAtRouteResult("GetClient", new { id = client.ClientId }, client);
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("client/{id:int}")]
     public ActionResult Put(int id, Client client) {
         if (id != client.ClientId)
             return BadRequest();
@@ -53,7 +53,7 @@ public class ClientsController : ControllerBase {
         return Ok(client);
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("client/{id:int}")]
     public ActionResult Delete(int id) {
         var client = _context.Clients.FirstOrDefault(p => p.ClientId == id);
         if (client is null)

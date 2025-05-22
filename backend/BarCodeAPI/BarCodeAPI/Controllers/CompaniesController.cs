@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
-[Route("[controller]")]
+[Route("api/v1")]
 [ApiController]
 public class CompaniesController : ControllerBase {
     private readonly AppDbContext _context;
@@ -15,7 +15,7 @@ public class CompaniesController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("companies")]
     public ActionResult<IEnumerable<Company>> Get() {
         var companies = _context.Companies.AsNoTracking().Take(10).ToList();
         if (companies is null)
@@ -23,7 +23,7 @@ public class CompaniesController : ControllerBase {
         return companies;
     }
 
-    [HttpGet("{id:int}", Name = "GetCompany")]
+    [HttpGet("company/{id:int}", Name = "GetCompany")]
     public ActionResult<Company> Get(int id) {
         var company = _context.Companies.AsNoTracking().FirstOrDefault(p => p.CompanyId == id);
         if (company is null)
@@ -31,7 +31,7 @@ public class CompaniesController : ControllerBase {
         return company;
     }
 
-    [HttpPost]
+    [HttpPost("company")]
     public ActionResult Post(Company company) {
         if (company is null)
             return BadRequest();
@@ -42,7 +42,7 @@ public class CompaniesController : ControllerBase {
         return CreatedAtRoute("GetCompany", new { id = company.CompanyId }, company);
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut("company/{id:int}")]
     public ActionResult Put(int id, Company company) {
         if (id != company.CompanyId)
             return BadRequest();
@@ -53,7 +53,7 @@ public class CompaniesController : ControllerBase {
         return Ok(company);
     }
 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("company/{id:int}")]
     public ActionResult Delete(int id) {
         var company = _context.Companies.FirstOrDefault(p => p.CompanyId == id);
         if (company is null)
