@@ -28,4 +28,30 @@ public class ProductCompaniesController : ControllerBase {
             return NotFound("Produtos não encontrados...");
         return Ok(products);
     }
+
+    [HttpPost("product")]
+    public ActionResult Post(int companyId, [FromBody] ProductCompanyDTO? dto) {
+        if (dto is null || dto.CompanyId != companyId)
+            return BadRequest();
+        
+        var company = _context.Companies.Find(companyId);
+        if (company is null)
+            return NotFound("Empresa não encontrada");
+        
+        var product = _context.Products.Find(dto.ProductId);
+        if (product is null)
+            return NotFound("Produto não encontrado");
+        
+        var productCompany = new ProductCompany {
+            CompanyId = companyId,
+            ProductId = dto.ProductId,
+            Price = dto.Price,
+            Stock = dto.Stock
+        };
+        
+        _context.Add(productCompany);
+        _context.SaveChanges();
+        
+        return CreatedAtRoute("GetProductCompanies", new { companyId = productCompany.CompanyId }, productCompany);
+    }
 }
