@@ -17,4 +17,18 @@ public class CartServiceTests {
         // Assert
         Assert.Equal(expectedSubtotal, result);
     }
+
+    [Fact]
+    public void CalculateTotal_AddsSubtotals_ReturnCorrectTotal() {
+        // Arrange
+        var cartService = new CartService();
+        var subtotals = new List<decimal> { 10.00m, 20.00m, 30.00m };
+        decimal expectedTotal = 60.00m;
+        
+        // Act
+        decimal result = cartService.CalculateTotal(subtotals);
+        
+        // Assert
+        Assert.Equal(expectedTotal, result);
+    }
 }
