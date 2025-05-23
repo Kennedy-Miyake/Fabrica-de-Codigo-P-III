@@ -8,6 +8,6 @@ public class CartService : ICartService {
     }
 
     public decimal CalculateTotal(IEnumerable<decimal> subtotals) {
-        throw new System.NotImplementedException();
+        return subtotals.Sum();
     }
 }
