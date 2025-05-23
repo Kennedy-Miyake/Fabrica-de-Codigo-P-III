@@ -31,6 +31,24 @@ public class OrderItemController : ControllerBase {
         return Ok(orderItemDTOs);
     }
 
+    [HttpGet("orderitem/{orderItemId:int}", Name = "GetOrderItems")]
+    public async Task<ActionResult<OrderItemDTO>> GetOrderItem(int orderItemId) {
+        var orderItem = await _context.OrderItems.AsNoTracking().FirstOrDefaultAsync(p => p.OrderItemId == orderItemId);
+        
+        if (orderItem is null)
+            return NotFound("Item do pedido não encontrado...");
+
+        var orderItemDTO = new OrderItem {
+            OrderId = orderItem.OrderId,
+            ProductCompanyId = orderItem.ProductCompanyId,
+            Quantity = orderItem.Quantity,
+            UnitaryPrice = orderItem.UnitaryPrice,
+            SubTotal = orderItem.SubTotal
+        };
+        
+        return Ok(orderItemDTO);
+    }
+
     [HttpGet("orderitems/order/{orderId:int}")]
     public async Task<ActionResult<OrderItemDTO>> GetAllOrderItemsByOrderId(int orderId) {
         var orderItems = await _context.OrderItems
@@ -74,6 +92,6 @@ public class OrderItemController : ControllerBase {
         _context.Add(orderItem);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetOrderItem", new { id = orderItem.OrderId }, orderItem);
+        return CreatedAtAction("GetOrderItems", new { id = orderItem.OrderId }, orderItem);
     }
 }
