@@ -18,8 +18,4 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\backend\Shared\BarCode.Domain\BarCode.Domain\BarCode.Domain.csproj" />
-    </ItemGroup>
-
 </Project>
