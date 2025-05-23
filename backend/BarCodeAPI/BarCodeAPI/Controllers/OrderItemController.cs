@@ -15,7 +15,7 @@ public class OrderItemController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet("orderitems", Name = "GetOrderItems")]
+    [HttpGet("orderitems")]
     public async Task<ActionResult<IEnumerable<OrderItemDTO>>> GetAllOrderItems() {
         var orderItems = await _context.OrderItems.AsNoTracking().Take(10).ToListAsync();
         if (orderItems is null)
@@ -31,8 +31,8 @@ public class OrderItemController : ControllerBase {
         return Ok(orderItemDTOs);
     }
 
-    [HttpGet("orderitems/order")]
-    public async Task<ActionResult<OrderItemDTO>> GetAllOrderItemsByOrderId([FromQuery] int orderId) {
+    [HttpGet("orderitems/order/{orderId:int}")]
+    public async Task<ActionResult<OrderItemDTO>> GetAllOrderItemsByOrderId(int orderId) {
         var orderItems = await _context.OrderItems
                                        .AsNoTracking()
                                        .Where(oi => oi.OrderId == orderId)
