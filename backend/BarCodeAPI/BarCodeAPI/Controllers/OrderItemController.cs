@@ -2,6 +2,7 @@ using BarCode.Infrastructure.Context;
 using Microsoft.AspNetCore.Mvc;
 using BarCode.Domain.DTO;
 using BarCode.Domain.Models;
+using BarCode.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
@@ -10,9 +11,11 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class OrderItemController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ICartService _cartService;
     
-    public OrderItemController(AppDbContext context) {
+    public OrderItemController(AppDbContext context, ICartService cartService) {
         _context = context;
+        _cartService = cartService;
     }
 
     [HttpGet("orderitems")]
@@ -84,8 +87,8 @@ public class OrderItemController : ControllerBase {
             OrderId = dto.OrderId,
             ProductCompanyId = dto.ProductCompanyId,
             Quantity = dto.Quantity,
-            UnitaryPrice = dto.UnitaryPrice,
-            SubTotal = dto.SubTotal
+            UnitaryPrice = productCompany.Price,
+            SubTotal = _cartService.CalculateSubtotal(productCompany.Price, dto.Quantity)
         };
         
         _context.Add(orderItem);
