@@ -38,6 +38,13 @@ public class OrderItemController : ControllerBase {
         if (orderItem is null)
             return NotFound("Item do pedido não encontrado...");
 
+        var orderItemDTO = new OrderItemDTO(
+                                            orderItem.OrderItemId,
+                                            orderItem.OrderId,
+                                            orderItem.ProductCompanyId,
+                                            orderItem.Quantity,
+                                            orderItem.UnitaryPrice,
+                                            orderItem.SubTotal);
         return Ok(orderItemDTO);
     }
 
