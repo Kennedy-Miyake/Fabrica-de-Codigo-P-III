@@ -6,4 +6,8 @@ public class CartService : ICartService {
     public decimal CalculateSubtotal(decimal unitaryPrice, int quantity) {
         return unitaryPrice * quantity;
     }
+
+    public decimal CalculateTotal(IEnumerable<decimal> subtotals) {
+        throw new System.NotImplementedException();
+    }
 }
