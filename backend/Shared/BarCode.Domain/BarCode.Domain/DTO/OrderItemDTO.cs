@@ -17,3 +17,13 @@ public record OrderItemDTO(
                                                           model.UnitaryPrice,
                                                           model.SubTotal);
 }
+
+public record OrderItemCreateDTO(
+    int OrderId,
+    int ProductCompanyId,
+    int Quantity) {
+    public OrderItemCreateDTO FromModel(OrderItemCreateDTO model) => new(
+                                                                         model.OrderId,
+                                                                         model.ProductCompanyId,
+                                                                         model.Quantity);
+}
