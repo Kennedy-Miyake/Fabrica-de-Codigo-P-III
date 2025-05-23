@@ -30,4 +30,24 @@ public class OrderItemController : ControllerBase {
                                                                                       item.SubTotal)).ToList();
         return Ok(orderItemDTOs);
     }
+
+    [HttpGet("orderitems/order")]
+    public async Task<ActionResult<OrderItemDTO>> GetAllOrderItemsByOrderId([FromQuery] int orderId) {
+        var orderItems = await _context.OrderItems
+                                       .AsNoTracking()
+                                       .Where(oi => oi.OrderId == orderId)
+                                       .ToListAsync();
+
+        if (!orderItems.Any())
+            return NotFound("Itens dos pedidos não encontrados...");
+        
+        var orderItemDTOs = orderItems.Select(item => new OrderItemDTO(
+                                                                                      item.OrderItemId,
+                                                                                      item.OrderId,
+                                                                                      item.ProductCompanyId,
+                                                                                      item.Quantity,
+                                                                                      item.UnitaryPrice,
+                                                                                      item.SubTotal)).ToList();
+        return Ok(orderItemDTOs);
+    }
 }
