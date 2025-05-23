@@ -31,21 +31,13 @@ public class OrderItemController : ControllerBase {
         return Ok(orderItemDTOs);
     }
 
-    [HttpGet("orderitem/{orderItemId:int}", Name = "GetOrderItems")]
-    public async Task<ActionResult<OrderItemDTO>> GetOrderItem(int orderItemId) {
+    [HttpGet("orderitem/{orderItemId:int}", Name = "GetOrderItem")]
+    public async Task<ActionResult<OrderItemDTO>> GetOrderItemById(int orderItemId) {
         var orderItem = await _context.OrderItems.AsNoTracking().FirstOrDefaultAsync(p => p.OrderItemId == orderItemId);
         
         if (orderItem is null)
             return NotFound("Item do pedido não encontrado...");
 
-        var orderItemDTO = new OrderItem {
-            OrderId = orderItem.OrderId,
-            ProductCompanyId = orderItem.ProductCompanyId,
-            Quantity = orderItem.Quantity,
-            UnitaryPrice = orderItem.UnitaryPrice,
-            SubTotal = orderItem.SubTotal
-        };
-        
         return Ok(orderItemDTO);
     }
 
