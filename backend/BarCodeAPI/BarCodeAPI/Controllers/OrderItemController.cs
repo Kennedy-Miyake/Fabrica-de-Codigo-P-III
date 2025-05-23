@@ -91,6 +91,14 @@ public class OrderItemController : ControllerBase {
         _context.Add(orderItem);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetOrderItems", new { id = orderItem.OrderId }, orderItem);
+        var orderItemDTO = new OrderItemDTO(
+            orderItem.OrderItemId,
+            orderItem.OrderId,
+            orderItem.ProductCompanyId,
+            orderItem.Quantity,
+            orderItem.UnitaryPrice,
+            orderItem.SubTotal);
+        
+        return CreatedAtAction(nameof(GetOrderItemById), new { orderItemId = orderItem.OrderItemId }, orderItemDTO);
     }
 }
