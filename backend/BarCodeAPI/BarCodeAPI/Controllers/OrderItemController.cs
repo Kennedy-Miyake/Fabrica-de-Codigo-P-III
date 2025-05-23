@@ -72,7 +72,7 @@ public class OrderItemController : ControllerBase {
     }
 
     [HttpPost("orderitem")]
-    public async Task<ActionResult> PostOrderItem([FromBody] OrderItemDTO? dto) {
+    public async Task<ActionResult> PostOrderItem([FromBody] OrderItemCreateDTO? dto) {
         if(dto is null)
             return BadRequest();
         var order = await _context.Orders.FindAsync(dto.OrderId);
