@@ -15,7 +15,7 @@ public class OrderItemController : ControllerBase {
         _context = context;
     }
 
-    [HttpGet("orderitems")]
+    [HttpGet("orderitems", Name = "GetOrderItems")]
     public async Task<ActionResult<IEnumerable<OrderItemDTO>>> GetAllOrderItems() {
         var orderItems = await _context.OrderItems.AsNoTracking().Take(10).ToListAsync();
         if (orderItems is null)
@@ -49,5 +49,31 @@ public class OrderItemController : ControllerBase {
                                                                                       item.UnitaryPrice,
                                                                                       item.SubTotal)).ToList();
         return Ok(orderItemDTOs);
+    }
+
+    [HttpPost("orderitem")]
+    public async Task<ActionResult> PostOrderItem([FromBody] OrderItemDTO? dto) {
+        if(dto is null)
+            return BadRequest();
+        var order = await _context.Orders.FindAsync(dto.OrderId);
+        if (order is null)
+            return NotFound("Pedido não encontrado");
+        
+        var productCompany = await _context.ProductCompanies.FindAsync(dto.ProductCompanyId);
+        if (productCompany is null)
+            return NotFound("Produto não encontrado");
+        
+        var orderItem = new OrderItem {
+            OrderId = dto.OrderId,
+            ProductCompanyId = dto.ProductCompanyId,
+            Quantity = dto.Quantity,
+            UnitaryPrice = dto.UnitaryPrice,
+            SubTotal = dto.SubTotal
+        };
+        
+        _context.Add(orderItem);
+        await _context.SaveChangesAsync();
+        
+        return CreatedAtAction("GetOrderItem", new { id = orderItem.OrderId }, orderItem);
     }
 }
