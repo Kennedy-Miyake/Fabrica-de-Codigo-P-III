@@ -1,22 +1,33 @@
+using System.Text.RegularExpressions;
+using BarCode.Domain.Services;
+
 namespace BarCode.Infrastructure.Services;
 
-public class EmailValidation
+public class EmailValidation : IEmailValidation
 {
-// Ele herda diretamente a logica do contrato 
-
-//definir a logica por traz do metodo definido lá no contrato
-
-    public bool IsValid(string email)
+    // Validação de e-mail usando expressão regular
+    public bool IsValidEmail(string email)
     {
-        // Implementar a lógica de validação de e-mail
-        // Exemplo: verificar se contém "@" e "."
-        return !string.IsNullOrEmpty(email) && email.Contains("@") && email.Contains(".");
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        // Regex simples para validação de e-mail
+        var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        return regex.IsMatch(email);
     }
+
     public bool IsValidDomain(string email)
     {
-        // Implementar a lógica de validação de domínio
-        // Exemplo simples: verificar se o domínio é "example.com"
-        return email.EndsWith("@example.com");
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        // Exemplo: verifica se o domínio é "example.com"
+        return email.EndsWith("@example.com", StringComparison.OrdinalIgnoreCase);
     }
-    
+
+    public Task<bool> IsEmailUniqueAsync(string email)
+    {
+        // Implementação fictícia, deve ser substituída por lógica real de verificação
+        return Task.FromResult(true);
+    }
 }
