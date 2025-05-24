@@ -14,13 +14,18 @@ public class ProductsController : ControllerBase
     private readonly AppDbContext _context;
     private readonly IAutomaticRegistration _automaticRegistration;
     private readonly IBarCodeValidation _barCodeValidation;
+    // chamar o IEmail Validation
+    
 
     public ProductsController(AppDbContext context, 
                               IAutomaticRegistration automaticRegistration, 
-                              IBarCodeValidation barCodeValidation) {
+                              IBarCodeValidation barCodeValidation
+                              // chamar o IEmailValidation emailvalidation
+                              ) {
         _context = context;
         _automaticRegistration = automaticRegistration;
         _barCodeValidation = barCodeValidation;
+        // inciando o IEmailValidation
     }
 
     [HttpGet("products")]

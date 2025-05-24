@@ -35,6 +35,10 @@ public class ClientsController : ControllerBase {
     public ActionResult Post(Client client) {
         if (client is null)
             return BadRequest();
+        
+        //if(Verficação de email)
+        
+        // if(verificação de senha) 
 
         _context.Clients.Add(client);
         _context.SaveChanges();
