@@ -6,3 +6,4 @@ public interface IEmailValidation
     bool IsValidDomain(string email);
     Task<bool> IsEmailUniqueAsync(string email);
 }
+
