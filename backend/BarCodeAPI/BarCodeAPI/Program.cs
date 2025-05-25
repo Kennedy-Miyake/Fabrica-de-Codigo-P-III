@@ -8,6 +8,8 @@ using BarCode.Infrastructure.Services; // Adicionar o namespace dos seus serviç
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
+
+
 namespace BarCodeAPI;
 
 public class Program

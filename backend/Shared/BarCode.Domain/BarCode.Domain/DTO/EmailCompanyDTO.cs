@@ -1,4 +1,3 @@
-// Localização Sugerida: backend/BarCodeAPI/BarCodeAPI/Dtos/ClientCreateDto.cs
 using System.ComponentModel.DataAnnotations;
 
 namespace BarCodeAPI.Dtos

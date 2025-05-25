@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks; // Adicionar para Task
 
 
+
 namespace BarCodeAPI.Controllers;
 
 [Route("[controller]")]
