@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarCode.Domain", "..\Shared
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarCode.Infrastructure.Tests", "..\..\tests\BarCode.Infrastructure.Tests\BarCode.Infrastructure.Tests\BarCode.Infrastructure.Tests.csproj", "{3F55B43A-B6F5-4FA4-BDB7-88F4E8695EF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarCodeAPI.Tests", "..\..\tests\BarCodeAPI.Tests\BarCodeAPI.Tests\BarCodeAPI.Tests.csproj", "{13D8784F-779F-4A52-BFD6-B5317E3A7541}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,18 @@ Global
 		{3F55B43A-B6F5-4FA4-BDB7-88F4E8695EF8}.Release|x64.Build.0 = Release|Any CPU
 		{3F55B43A-B6F5-4FA4-BDB7-88F4E8695EF8}.Release|x86.ActiveCfg = Release|Any CPU
 		{3F55B43A-B6F5-4FA4-BDB7-88F4E8695EF8}.Release|x86.Build.0 = Release|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Debug|x64.Build.0 = Debug|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Debug|x86.Build.0 = Debug|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Release|x64.ActiveCfg = Release|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Release|x64.Build.0 = Release|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Release|x86.ActiveCfg = Release|Any CPU
+		{13D8784F-779F-4A52-BFD6-B5317E3A7541}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

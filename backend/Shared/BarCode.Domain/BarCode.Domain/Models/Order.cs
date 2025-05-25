@@ -1,6 +1,8 @@
 // ReSharper disable all
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace BarCode.Domain.Models;
 
 [Table("Orders")]
@@ -18,5 +20,6 @@ public class Order {
     
     [ForeignKey("ClientId")]
     public int ClientId { get; set; }
+    [JsonIgnore]
     public Client? Client { get; set; }
 }

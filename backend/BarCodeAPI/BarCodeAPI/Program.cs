@@ -29,6 +29,7 @@ public class Program {
         builder.Services
                .AddScoped<IAutomaticRegistration, AutomaticRegistration>()
                .AddScoped<IBarCodeValidation, Ean13BarCodeValidator>()
+               .AddScoped<ICartService, CartService>()
                .AddHttpClient<IBlueSoftCosmosClient, BlueSoftCosmosClient>((sp, client) => {
                    var cfg = sp.GetRequiredService<IConfiguration>();
                    client.BaseAddress = new Uri("https://api.cosmos.bluesoft.com.br/");
