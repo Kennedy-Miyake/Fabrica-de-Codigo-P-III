@@ -91,7 +91,8 @@ public class OrderItemController : ControllerBase {
             SubTotal = _cartService.CalculateSubtotal(productCompany.Price, dto.Quantity)
         };
         
-        _context.Add(orderItem);
+        _context.OrderItems.Add(orderItem);
+        _cartService.CalculateTotal(ref order, orderItem.SubTotal);
         await _context.SaveChangesAsync();
         
         var orderItemDTO = new OrderItemDTO(
