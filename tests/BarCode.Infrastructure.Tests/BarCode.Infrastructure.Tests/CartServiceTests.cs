@@ -1,3 +1,4 @@
+using BarCode.Domain.Models;
 using BarCode.Infrastructure.Services;
 
 namespace BarCode.Infrastructure.Tests;
@@ -22,11 +23,12 @@ public class CartServiceTests {
     public void CalculateTotal_AddsSubtotals_ReturnCorrectTotal() {
         // Arrange
         var cartService = new CartService();
-        var subtotals = new List<decimal> { 10.00m, 20.00m, 30.00m };
-        decimal expectedTotal = 60.00m;
+        var order = new Order { OrderTotal = 0 };
+        decimal subtotal = 50.00m;
+        decimal expectedTotal = 50.00m;
         
         // Act
-        decimal result = cartService.CalculateTotal(subtotals);
+        decimal result = cartService.CalculateTotal(ref order, subtotal);
         
         // Assert
         Assert.Equal(expectedTotal, result);
