@@ -31,8 +31,10 @@ public class ProductsController : ControllerBase
     [HttpGet("products")]
     public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts() {
         var products = await _context.Products.AsNoTracking().Take(10).ToListAsync();
-        if (products is null)
-            return NotFound("Produtos não encontrados...");
+        if (products is null) {
+            _logger.LogWarning($"Produtos não encontrados.");
+            return NotFound($"Produtos não encontrados.");
+        }
         
         var productDTOs = products.Select(product => new ProductDTO(
                                                                     product.ProductId,
@@ -47,8 +49,10 @@ public class ProductsController : ControllerBase
     [HttpGet("product/{id:int}", Name = "GetProduct")]
     public async Task<ActionResult<Product>> GetProduct(int id) {
         var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
-        if (product is null)
-            return NotFound("Produto não encontrado.");
+        if (product is null) {
+            _logger.LogWarning($"Produto com ID {id} não encontrado.");
+            return NotFound($"Produto com ID {id} não encontrado.");
+        }
        
         var productDTO = new ProductDTO(
                                         product.ProductId,
@@ -69,8 +73,10 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<Product>> GetProductByBarcode(string barcode) {
         var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.BarCode == barcode);
 
-        if (product is null)
-            return NotFound("Produto não encontrado.");
+        if (product is null) {
+            _logger.LogWarning($"Produto com código de barras {barcode} não encontrado.");
+            return NotFound($"Produto com código de barras {barcode} não encontrado.");
+        }
         
         var productDTO = new ProductDTO(
                                         product.ProductId,
@@ -85,8 +91,10 @@ public class ProductsController : ControllerBase
     [HttpPost("product")]
     public async Task<ActionResult<Product>> CreateProduct(ProductDTO dto) {
         var product = new Product();
-        if (dto is null)
-            return BadRequest();
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest($"Dados inválidos.");
+        }
         if (_barCodeValidation.IsValid(dto.BarCode!) &&
             _barCodeValidation.IsValidBrazilianBarCode(dto.BarCode!)) {
 
@@ -99,6 +107,7 @@ public class ProductsController : ControllerBase
             await _context.SaveChangesAsync();
         }
         else {
+            _logger.LogWarning($"Código de barras inválido.");
             return BadRequest("Código de barras inválido.");
         }
         
@@ -107,8 +116,10 @@ public class ProductsController : ControllerBase
 
     [HttpPut("product/{id:int}")]
     public async Task<ActionResult<Product>> UpdateProduct(int id, ProductDTO dto) {
-        if (id != dto.ProductId)
-            return BadRequest();
+        if (id != dto.ProductId) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest($"Dados inválidos.");
+        }
         
         var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
         
@@ -119,8 +130,10 @@ public class ProductsController : ControllerBase
            _barCodeValidation.IsValidBrazilianBarCode(dto.BarCode)) {
             product.BarCode = dto.BarCode;
         }
-        else
+        else {
+            _logger.LogWarning($"Código de barras inválido.");
             return BadRequest("Código de barras inválido.");
+        }
 
         _context.Entry(product).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -138,8 +151,10 @@ public class ProductsController : ControllerBase
     [HttpDelete("product/{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id) {
         var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-        if (product is null)
-            return NotFound("Produto não encontrado...");
+        if (product is null) {
+            _logger.LogWarning($"Produto com ID {id} não encontrado.");
+            return NotFound($"Produto com ID {id} não encontrado.");
+        }
         
         var productDTO = new ProductDTO(
                                         product.ProductId,
