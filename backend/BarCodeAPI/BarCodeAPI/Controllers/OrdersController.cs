@@ -34,11 +34,19 @@ public class OrdersController : ControllerBase {
     }
 
     [HttpGet("order/{id:int}", Name = "GetOrder")]
-    public ActionResult<Order> Get(int id) {
-        var order = _context.Orders.AsNoTracking().FirstOrDefault(p => p.OrderId == id);
+    public async Task<ActionResult<Order>> GetOrder(int id) {
+        var order = await _context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == id);
         if(order is null)
             return NotFound("Pedido não encontrado.");
-        return order;
+        
+        var orderDTO = new OrderDTO(
+                                    order.OrderId,
+                                    order.DeliveryAddress,
+                                    order.OrderDate,
+                                    order.OrderTotal,
+                                    order.ClientId);
+
+        return Ok(orderDTO);
     }
 
     [HttpPost("order")]
