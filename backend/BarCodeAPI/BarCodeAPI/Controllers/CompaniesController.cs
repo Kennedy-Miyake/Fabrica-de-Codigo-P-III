@@ -102,14 +102,22 @@ public class CompaniesController : ControllerBase {
     }
 
     [HttpDelete("company/{id:int}")]
-    public ActionResult Delete(int id) {
-        var company = _context.Companies.FirstOrDefault(p => p.CompanyId == id);
+    public async Task<ActionResult> DeleteCompany(int id) {
+        var company = await _context.Companies.FirstOrDefaultAsync(c => c.CompanyId == id);
         if (company is null)
             return NotFound("Empresa não encontrada...");
+        
+        var companyDTO = new CompanyDTO(
+            company.CompanyId,
+            company.Name,
+            company.CNPJ,
+            company.Email,
+            company.Phone,
+            company.Address);
         
         _context.Companies.Remove(company);
         _context.SaveChanges();
         
-        return Ok(company);
+        return Ok(companyDTO);
     }
 }
