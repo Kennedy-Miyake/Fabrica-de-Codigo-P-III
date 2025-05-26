@@ -17,15 +17,20 @@ public class ProductsController : ControllerBase
     private readonly ILogger<ProductsController> _logger;
     private readonly IAutomaticRegistration _automaticRegistration;
     private readonly IBarCodeValidation _barCodeValidation;
+    // chamar o IEmail Validation
+    
 
     public ProductsController(AppDbContext context,
                               ILogger<ProductsController> logger,
                               IAutomaticRegistration automaticRegistration, 
-                              IBarCodeValidation barCodeValidation) {
+                              IBarCodeValidation barCodeValidation
+                              // chamar o IEmailValidation emailvalidation
+                              ) {
         _context = context;
         _logger = logger;
         _automaticRegistration = automaticRegistration;
         _barCodeValidation = barCodeValidation;
+        // inciando o IEmailValidation
     }
 
     [HttpGet("products")]

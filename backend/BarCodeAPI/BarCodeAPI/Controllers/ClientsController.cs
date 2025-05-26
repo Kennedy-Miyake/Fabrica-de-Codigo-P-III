@@ -1,23 +1,31 @@
+// backend/BarCodeAPI/BarCodeAPI/Controllers/ClientsController.cs
 // ReSharper disable all
 
 using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
+using BarCode.Domain.Services; // Adicionar o namespace dos seus serviços de domínio
 using BarCodeAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks; // Adicionar para Task
 
 namespace BarCodeAPI.Controllers;
 
 [Route("api/v1")]
 [ApiController]
-public class ClientsController : ControllerBase {
+public class ClientsController : ControllerBase
+{
     private readonly AppDbContext _context;
     private readonly ILogger<ClientsController> _logger;
+    private readonly IEmailValidation _emailValidationService; 
 
-    public ClientsController(AppDbContext context, ILogger<ClientsController> logger) {
+    
+    public ClientsController(AppDbContext context, ILogger<ClientsController> logger, IEmailValidation emailValidationService)
+    {
         _context = context;
         _logger = logger;
+        _emailValidationService = emailValidationService; 
     }
 
     [HttpGet("clients")]
@@ -63,12 +71,21 @@ public class ClientsController : ControllerBase {
             return BadRequest($"Dados inválidos.");
         }
 
-        var client = new Client {
-            Name = dto.Name,
-            Email = dto.Email,
-            Phone = dto.Phone,
-            Address = dto.Address
-        };
+        var client = new Client();
+
+        if (_emailValidationService.IsValidEmail(dto.Email) && await _emailValidationService.IsEmailUniqueAsync(dto.Email))
+        {
+            client.Email = dto.Email;
+        }
+        else
+        {
+            _logger.LogWarning($"E-mail inválido.");
+            return BadRequest($"E-mail inválido.");
+        }
+
+        client.Name = dto.Name;
+        client.Phone = dto.Phone;
+        client.Address = dto.Address;
 
         _context.Clients.Add(client);
         await _context.SaveChangesAsync();
@@ -97,8 +114,18 @@ public class ClientsController : ControllerBase {
             return NotFound($"Cliente não encontrado.");
         }
 
+
+        if (_emailValidationService.IsValidEmail(dto.Email) && await _emailValidationService.IsEmailUniqueAsync(dto.Email))
+        {
+            client.Email = dto.Email;
+        }
+        else
+        {
+            _logger.LogWarning($"E-mail inválido.");
+            return BadRequest($"E-mail inválido.");
+        }
+
         client.Name = dto.Name;
-        client.Email = dto.Email;
         client.Phone = dto.Phone;
         client.Address = dto.Address;
         
