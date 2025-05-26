@@ -49,6 +49,15 @@
         required
       />
     </div>
+
+    <!-- Botão de Enviar -->
+    <div class="flex flex-col">
+      <button
+        type="submit"
+        class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+        Cadastrar
+      </button>
+    </div>
   </form>
 </template>
 
