@@ -9,20 +9,24 @@ namespace BarCodeAPI.Controllers;
 
 [Route("api/v1")]
 [ApiController]
-public class OrderItemController : ControllerBase {
+public class OrderItemsController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<OrderItemsController> _logger;
     private readonly ICartService _cartService;
     
-    public OrderItemController(AppDbContext context, ICartService cartService) {
+    public OrderItemsController(AppDbContext context, ILogger<OrderItemsController> logger, ICartService cartService) {
         _context = context;
+        _logger = logger;
         _cartService = cartService;
     }
 
     [HttpGet("orderitems")]
     public async Task<ActionResult<IEnumerable<OrderItemDTO>>> GetAllOrderItems() {
         var orderItems = await _context.OrderItems.AsNoTracking().Take(10).ToListAsync();
-        if (orderItems is null)
-            return NotFound("Itens dos pedidos não encontrados...");
+        if (orderItems is null) {
+            _logger.LogWarning($"Itens dos pedidos não encontrados.");
+            return NotFound($"Itens dos pedidos não encontrados.");
+        }
 
         var orderItemDTOs = orderItems.Select(item => new OrderItemDTO(
                                                                                       item.OrderItemId,
@@ -37,9 +41,11 @@ public class OrderItemController : ControllerBase {
     [HttpGet("orderitem/{orderItemId:int}", Name = "GetOrderItem")]
     public async Task<ActionResult<OrderItemDTO>> GetOrderItemById(int orderItemId) {
         var orderItem = await _context.OrderItems.AsNoTracking().FirstOrDefaultAsync(p => p.OrderItemId == orderItemId);
-        
-        if (orderItem is null)
-            return NotFound("Item do pedido não encontrado...");
+
+        if (orderItem is null) {
+            _logger.LogWarning($"Item do pedido com ID {orderItemId} não encontrado.");
+            return NotFound($"Item do pedido com ID {orderItemId} não encontrado.");
+        }
 
         var orderItemDTO = new OrderItemDTO(
                                             orderItem.OrderItemId,
@@ -58,8 +64,10 @@ public class OrderItemController : ControllerBase {
                                        .Where(oi => oi.OrderId == orderId)
                                        .ToListAsync();
 
-        if (!orderItems.Any())
-            return NotFound("Itens dos pedidos não encontrados...");
+        if (!orderItems.Any()) {
+            _logger.LogWarning($"Itens do pedido com ID {orderId} não encontrados.");
+            return NotFound($"Itens do pedido com ID {orderId} não encontrados.");
+        }
         
         var orderItemDTOs = orderItems.Select(item => new OrderItemDTO(
                                                                                       item.OrderItemId,
@@ -73,15 +81,21 @@ public class OrderItemController : ControllerBase {
 
     [HttpPost("orderitem")]
     public async Task<ActionResult> PostOrderItem([FromBody] OrderItemCreateDTO? dto) {
-        if(dto is null)
-            return BadRequest();
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos.");   
+            return BadRequest($"Dados inválidos");
+        }
         var order = await _context.Orders.FindAsync(dto.OrderId);
-        if (order is null)
-            return NotFound("Pedido não encontrado");
+        if (order is null) {
+            _logger.LogWarning($"Pedido com ID {dto.OrderId} não encontrado.");
+            return NotFound($"Pedido com ID {dto.OrderId} não encontrado.");
+        }
         
         var productCompany = await _context.ProductCompanies.FindAsync(dto.ProductCompanyId);
-        if (productCompany is null)
-            return NotFound("Produto não encontrado");
+        if (productCompany is null) {
+            _logger.LogWarning($"Produto com ID {dto.ProductCompanyId} não encontrado.");
+            return NotFound($"Produto com ID {dto.ProductCompanyId} não encontrado.");
+        }
         
         var orderItem = new OrderItem {
             OrderId = dto.OrderId,

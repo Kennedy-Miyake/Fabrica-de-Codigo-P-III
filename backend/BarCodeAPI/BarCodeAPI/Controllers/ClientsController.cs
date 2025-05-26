@@ -1,6 +1,9 @@
 // ReSharper disable all
+
+using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
+using BarCodeAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,58 +13,126 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class ClientsController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<ClientsController> _logger;
 
-    public ClientsController(AppDbContext context) {
+    public ClientsController(AppDbContext context, ILogger<ClientsController> logger) {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet("clients")]
-    public ActionResult<IEnumerable<Client>> Get() {
-        var clients = _context.Clients.AsNoTracking().Take(10).ToList();
-        if (clients is null)
-            return NotFound("Clientes não encontrados...");
-        return clients;
+    public async Task<ActionResult<IEnumerable<Client>>> GetAllClients() {
+        var clients = await _context.Clients.AsNoTracking().Take(10).ToListAsync();
+        if (clients is null) {
+            _logger.LogWarning($"Clientes não encontrados.");
+            return NotFound($"Clientes não encontrados.");
+        }
+
+        var clientDTOs = clients.Select(client => new ClientDTO(
+                                                                client.ClientId,
+                                                                client.Name,
+                                                                client.Email,
+                                                                client.Phone,
+                                                                client.Address)).ToList();
+
+        return Ok(clientDTOs);
     }
 
     [HttpGet("client/{id:int}", Name = "GetClient")]
-    public ActionResult<Client> Get(int id) {
-        var client = _context.Clients.AsNoTracking().FirstOrDefault(p => p.ClientId == id);
-        if (client is null)
-            return NotFound("Cliente não encontrado.");
-        return client;
+    public async Task<ActionResult<Client>> GetClient(int id) {
+        var client = await _context.Clients.AsNoTracking().FirstOrDefaultAsync(p => p.ClientId == id);
+        if (client is null) {
+            _logger.LogWarning($"Cliente com id = {id} não encontrado."); 
+            return NotFound($"Cliente com id = {id} não encontrado.");
+        }
+        
+        var clientDTO = new ClientDTO(
+                                      client.ClientId,
+                                      client.Name,
+                                      client.Email,
+                                      client.Phone,
+                                      client.Address);
+
+        return Ok(clientDTO);
     }
 
     [HttpPost("client")]
-    public ActionResult Post(Client client) {
-        if (client is null)
-            return BadRequest();
+    public async Task<ActionResult> CreateClient(ClientDTO? dto) {
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos.");            
+            return BadRequest($"Dados inválidos.");
+        }
+
+        var client = new Client {
+            Name = dto.Name,
+            Email = dto.Email,
+            Phone = dto.Phone,
+            Address = dto.Address
+        };
 
         _context.Clients.Add(client);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
+        
+        var clientDTO = new ClientDTO(
+                                  client.ClientId,
+                                  client.Name,
+                                  client.Email,
+                                  client.Phone,
+                                  client.Address);
 
-        return new CreatedAtRouteResult("GetClient", new { id = client.ClientId }, client);
+        return new CreatedAtRouteResult(nameof(GetClient), new { id = client.ClientId }, clientDTO);
     }
 
     [HttpPut("client/{id:int}")]
-    public ActionResult Put(int id, Client client) {
-        if (id != client.ClientId)
-            return BadRequest();
+    public async Task<ActionResult> Put(int id, ClientDTO dto) {
+        if (id != dto.ClientId) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest($"Dados inválidos.");
+        }
+        
+        var client = await _context.Clients.AsNoTracking().FirstOrDefaultAsync(c => c.ClientId == id);
 
+        if (client is null) {
+            _logger.LogWarning($"Cliente não encontrado.");
+            return NotFound($"Cliente não encontrado.");
+        }
+
+        client.Name = dto.Name;
+        client.Email = dto.Email;
+        client.Phone = dto.Phone;
+        client.Address = dto.Address;
+        
         _context.Entry(client).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        return Ok(client);
+        var clientDTO = new ClientDTO(
+                                  client.ClientId,
+                                  client.Name,
+                                  client.Email,
+                                  client.Phone,
+                                  client.Address);
+        
+        return Ok(clientDTO);
     }
 
     [HttpDelete("client/{id:int}")]
-    public ActionResult Delete(int id) {
-        var client = _context.Clients.FirstOrDefault(p => p.ClientId == id);
-        if (client is null)
-            return NotFound("Cliente não encontrado...");
+    public async Task<ActionResult> Delete(int id) {
+        var client = await _context.Clients.FirstOrDefaultAsync(p => p.ClientId == id);
+        if (client is null) {
+            _logger.LogWarning($"Cliente com id = {id} não encontrado.");
+            return NotFound($"Cliente com id = {id} não encontrado.");
+        }
+        
+        var clientDTO = new ClientDTO(
+                                  client.ClientId,
+                                  client.Name,
+                                  client.Email,
+                                  client.Phone,
+                                  client.Address);
 
         _context.Clients.Remove(client);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(client);
+        return Ok(clientDTO);
     }
 }

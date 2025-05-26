@@ -1,4 +1,6 @@
 // ReSharper disable all
+
+using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,58 +12,126 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class CompaniesController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<CompaniesController> _logger;
 
-    public CompaniesController(AppDbContext context) {
+    public CompaniesController(AppDbContext context, ILogger<CompaniesController> logger) {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet("companies")]
-    public ActionResult<IEnumerable<Company>> Get() {
-        var companies = _context.Companies.AsNoTracking().Take(10).ToList();
-        if (companies is null)
-            return NotFound("Empresas não encontradas...");
-        return companies;
+    public async Task<ActionResult<IEnumerable<Company>>> GetAllCompanies() {
+        var companies = await _context.Companies.AsNoTracking().Take(10).ToListAsync();
+        if (companies is null) {
+            _logger.LogWarning($"Nenhuma empresa encontrada.");
+            return NotFound($"Nenhuma empresa encontrada.");
+        }
+
+        var companiesDTO = companies.Select(company => new CompanyDTO(
+                                                                      company.CompanyId,
+                                                                      company.Name,
+                                                                      company.CNPJ,
+                                                                      company.Email,
+                                                                      company.Phone,
+                                                                      company.Address)).ToList();
+        
+        return Ok(companiesDTO);
     }
 
     [HttpGet("company/{id:int}", Name = "GetCompany")]
-    public ActionResult<Company> Get(int id) {
-        var company = _context.Companies.AsNoTracking().FirstOrDefault(p => p.CompanyId == id);
-        if (company is null)
-            return NotFound("Empresa não encontrada.");
-        return company;
+    public async Task<ActionResult<Company>> GetCompany(int id) {
+        var company = await _context.Companies.AsNoTracking().FirstOrDefaultAsync(p => p.CompanyId == id);
+        if (company is null) {
+            _logger.LogWarning($"Nenhuma empresa com id = {id} encontrada.");   
+            return NotFound($"Nenhuma empresa com id = {id} encontrada.");
+        }
+        
+        var companyDTO = new CompanyDTO(
+                                        company.CompanyId,
+                                        company.Name,
+                                        company.CNPJ,
+                                        company.Email,
+                                        company.Phone,
+                                        company.Address);
+
+        return Ok(companyDTO);
     }
 
     [HttpPost("company")]
-    public ActionResult Post(Company company) {
-        if (company is null)
-            return BadRequest();
+    public async Task<ActionResult> CreateCompany(CompanyDTO dto) {
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest("Dados inválidos.");
+        }
+
+        var company = new Company {
+            CompanyId = dto.CompanyId,
+            Name = dto.Name,
+            CNPJ = dto.CNPJ,
+            Email = dto.Email,
+            Phone = dto.Phone,
+            Address = dto.Address
+        };
         
         _context.Companies.Add(company);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return CreatedAtRoute("GetCompany", new { id = company.CompanyId }, company);
+        return CreatedAtRoute(nameof(GetCompany), new { id = company.CompanyId }, dto);
     }
 
     [HttpPut("company/{id:int}")]
-    public ActionResult Put(int id, Company company) {
-        if (id != company.CompanyId)
-            return BadRequest();
+    public async Task<ActionResult> UpdateCompany(int id, CompanyDTO dto) {
+        if (id != dto.CompanyId) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest("Dados inválidos.");
+        }
+        
+        var company = await _context.Companies.FirstOrDefaultAsync(c => c.CompanyId == id);
+
+        if (company is null) {
+            _logger.LogWarning($"Nenhuma empresa encontrada.");   
+            return NotFound($"Empresa não encontrada.");
+        }
+        
+        company.Name = dto.Name;
+        company.CNPJ = dto.CNPJ;
+        company.Email = dto.Email;
+        company.Phone = dto.Phone;
+        company.Address = dto.Address;
 
         _context.Entry(company).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(company);
+        var companyDTO = new CompanyDTO(
+            company.CompanyId,
+            company.Name,
+            company.CNPJ,
+            company.Email,
+            company.Phone,
+            company.Address);
+        
+        return Ok(companyDTO);
     }
 
     [HttpDelete("company/{id:int}")]
-    public ActionResult Delete(int id) {
-        var company = _context.Companies.FirstOrDefault(p => p.CompanyId == id);
-        if (company is null)
-            return NotFound("Empresa não encontrada...");
+    public async Task<ActionResult> DeleteCompany(int id) {
+        var company = await _context.Companies.FirstOrDefaultAsync(c => c.CompanyId == id);
+        if (company is null) {
+            _logger.LogWarning($"Empresa não encontrada.");
+            return NotFound($"Empresa não encontrada.");
+        }
+        
+        var companyDTO = new CompanyDTO(
+            company.CompanyId,
+            company.Name,
+            company.CNPJ,
+            company.Email,
+            company.Phone,
+            company.Address);
         
         _context.Companies.Remove(company);
         _context.SaveChanges();
         
-        return Ok(company);
+        return Ok(companyDTO);
     }
 }
