@@ -75,19 +75,19 @@ public class ClientsController : ControllerBase
 
         var client = new Client();
 
-        if (_emailValidationService.IsValidEmail(dto.Email) && _emailValidationService.IsEmailUniqueAsync(dto.Email))
+        if (_emailValidationService.IsValidEmail(dto.Email) && await _emailValidationService.IsEmailUniqueAsync(dto.Email))
         {
             client.Email = dto.Email;
         }
         else
         {
             _logger.LogWarning($"E-mail inválido.");
-            return BadRequest($"E-mail inválido.")
+            return BadRequest($"E-mail inválido.");
         }
 
-        client.Name = dto.Name,
-        client.Phone = dto.Phone,
-        client.Address = dto.Address
+        client.Name = dto.Name;
+        client.Phone = dto.Phone;
+        client.Address = dto.Address;
 
         _context.Clients.Add(client);
         await _context.SaveChangesAsync();
@@ -117,14 +117,14 @@ public class ClientsController : ControllerBase
         }
 
 
-        if (_emailValidationService.IsValidEmail(dto.Email) && _emailValidationService.IsEmailUniqueAsync(dto.Email))
+        if (_emailValidationService.IsValidEmail(dto.Email) && await _emailValidationService.IsEmailUniqueAsync(dto.Email))
         {
             client.Email = dto.Email;
         }
         else
         {
             _logger.LogWarning($"E-mail inválido.");
-            return BadRequest($"E-mail inválido.")
+            return BadRequest($"E-mail inválido.");
         }
 
         client.Name = dto.Name;
