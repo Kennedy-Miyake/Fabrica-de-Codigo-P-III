@@ -37,6 +37,18 @@
         required
       ></textarea>
     </div>
+
+    <!-- Código de Barras -->
+    <div>
+      <label class="block mb-1 font-medium">Código de Barras</label>
+      <input
+        v-model="form.barcode"
+        type="text"
+        class="w-full border rounded"
+        placeholder="Código de barras"
+        required
+      />
+    </div>
   </form>
 </template>
 
