@@ -93,14 +93,21 @@ public class OrdersController : ControllerBase {
     }
 
     [HttpDelete("order/{id:int}")]
-    public ActionResult<Order> Delete(int id) {
-        var order = _context.Orders.FirstOrDefault(p => p.OrderId == id);
+    public async Task<ActionResult<Order>> DeleteOrder(int id) {
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
         if (order is null)
             return NotFound("Pedido não encontrado.");
         
-        _context.Orders.Remove(order);
-        _context.SaveChanges();
+        var orderDTO = new OrderDTO(
+            order.OrderId,
+            order.DeliveryAddress,
+            order.OrderDate,
+            order.OrderTotal,
+            order.ClientId);
         
-        return Ok(order);
+        _context.Orders.Remove(order);
+        await _context.SaveChangesAsync();
+        
+        return Ok(orderDTO);
     }
 }
