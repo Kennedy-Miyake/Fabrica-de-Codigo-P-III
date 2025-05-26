@@ -50,14 +50,21 @@ public class OrdersController : ControllerBase {
     }
 
     [HttpPost("order")]
-    public ActionResult<Order> Post(Order order) {
-        if (order is null)
+    public async Task<ActionResult<Order>> CreateOrder(OrderDTO dto) {
+        if (dto is null)
             return BadRequest();
+
+        var order = new Order {
+            DeliveryAddress = dto.DeliveryAddress,
+            OrderDate = dto.OrderDate,
+            OrderTotal = dto.OrderTotal,
+            ClientId = dto.ClientId
+        };
         
         _context.Orders.Add(order);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return CreatedAtRoute("GetOrder", new { id = order.OrderId }, order);
+        return CreatedAtRoute(nameof(GetOrder), new { id = order.OrderId }, dto);
     }
 
     [HttpPut("order/{id:int}")]
