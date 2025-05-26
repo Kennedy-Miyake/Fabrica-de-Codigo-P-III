@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      this.$emit('submit', ...this.form);
+      this.$emit('submit', this.form);
     }
   }
 };
