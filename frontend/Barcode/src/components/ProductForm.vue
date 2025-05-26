@@ -13,6 +13,18 @@
         required
       />
     </div>
+
+    <!-- Nome do Produto -->
+    <div>
+      <label class="block mb-1 font-medium">Nome do Produto</label>
+      <input
+        v-model="form.name"
+        type="text"
+        class="w-full border rounded"
+        placeholder="Nome do produto"
+        required
+      />
+    </div>
   </form>
 </template>
 
