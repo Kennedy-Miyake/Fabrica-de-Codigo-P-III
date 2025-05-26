@@ -1,4 +1,6 @@
 // ReSharper disable all
+
+using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +18,19 @@ public class OrdersController : ControllerBase {
     }
 
     [HttpGet("orders")]
-    public ActionResult<IEnumerable<Order>> Get() {
-        var orders = _context.Orders.AsNoTracking().Take(10).ToList();
+    public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders() {
+        var orders = await _context.Orders.AsNoTracking().Take(10).ToListAsync();
         if(orders is null)
             return NotFound("Pedidos não encontrados...");
-        return orders;
+
+        var orderDTOs = orders.Select(order => new OrderDTO(
+                                                         order.ClientId,
+                                                         order.DeliveryAddress,
+                                                         order.OrderDate,
+                                                         order.OrderTotal,
+                                                         order.ClientId)).ToList();
+        
+        return Ok(orderDTOs);
     }
 
     [HttpGet("order/{id:int}", Name = "GetOrder")]
