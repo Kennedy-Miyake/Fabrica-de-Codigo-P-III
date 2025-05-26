@@ -1,4 +1,6 @@
 // ReSharper disable all
+
+using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
 using BarCode.Domain.Services;
@@ -24,11 +26,19 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("products")]
-    public ActionResult<IEnumerable<Product>> Get() {
-        var products = _context.Products.AsNoTracking().Take(10).ToList();
+    public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts() {
+        var products = await _context.Products.AsNoTracking().Take(10).ToListAsync();
         if (products is null)
             return NotFound("Produtos não encontrados...");
-        return products;
+        
+        var productDTOs = products.Select(product => new ProductDTO(
+                                                                    product.ProductId,
+                                                                    product.Name,
+                                                                    product.Description,
+                                                                    product.ImageUrl,
+                                                                    product.BarCode)).ToList();
+        
+        return Ok(productDTOs);
     }
 
     [HttpGet("product/{id:int}", Name = "GetProduct")]
