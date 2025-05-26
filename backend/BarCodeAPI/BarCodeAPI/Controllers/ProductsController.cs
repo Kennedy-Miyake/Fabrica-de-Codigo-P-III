@@ -80,19 +80,26 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("product")]
-    public ActionResult<Product> Post(Product product) {
-        if (product is null)
+    public async Task<ActionResult<Product>> CreateProduct(ProductDTO dto) {
+        var product = new Product();
+        if (dto is null)
             return BadRequest();
-        if (_barCodeValidation.IsValid(product.BarCode!) &&
-            _barCodeValidation.IsValidBrazilianBarCode(product.BarCode!)) {
+        if (_barCodeValidation.IsValid(dto.BarCode!) &&
+            _barCodeValidation.IsValidBrazilianBarCode(dto.BarCode!)) {
+
+            product.Name = dto.Name;
+            product.Description = dto.Description;
+            product.ImageUrl = dto.ImageUrl;
+            product.BarCode = dto.BarCode;
+            
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         else {
             return BadRequest("Código de barras inválido.");
         }
         
-        return new CreatedAtRouteResult("GetProduct", new { id = product.ProductId }, product);
+        return new CreatedAtRouteResult(nameof(GetProduct), new { id = product.ProductId }, dto);
     }
 
     [HttpPut("product/{id:int}")]
