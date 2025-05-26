@@ -22,8 +22,10 @@ public class OrdersController : ControllerBase {
     [HttpGet("orders")]
     public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders() {
         var orders = await _context.Orders.AsNoTracking().Take(10).ToListAsync();
-        if(orders is null)
-            return NotFound("Pedidos não encontrados...");
+        if (orders is null) {
+            _logger.LogWarning($"Pedidos não encontrados.");
+            return NotFound($"Pedidos não encontrados.");
+        }
 
         var orderDTOs = orders.Select(order => new OrderDTO(
                                                          order.ClientId,
@@ -38,8 +40,10 @@ public class OrdersController : ControllerBase {
     [HttpGet("order/{id:int}", Name = "GetOrder")]
     public async Task<ActionResult<Order>> GetOrder(int id) {
         var order = await _context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == id);
-        if(order is null)
-            return NotFound("Pedido não encontrado.");
+        if (order is null) {
+            _logger.LogWarning($"Pedido com ID {id} não encontrado.");
+            return NotFound($"Pedido com ID {id} não encontrado.");
+        }
         
         var orderDTO = new OrderDTO(
                                     order.OrderId,
@@ -53,8 +57,10 @@ public class OrdersController : ControllerBase {
 
     [HttpPost("order")]
     public async Task<ActionResult<Order>> CreateOrder(OrderDTO dto) {
-        if (dto is null)
-            return BadRequest();
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos");           
+            return BadRequest($"Dados inválidos.");
+        }
 
         var order = new Order {
             DeliveryAddress = dto.DeliveryAddress,
@@ -71,8 +77,10 @@ public class OrdersController : ControllerBase {
 
     [HttpPut("order/{id:int}")]
     public async Task<ActionResult<Order>> UpdateOrder(int id, OrderDTO dto) {
-        if (id != dto.OrderId)
-            return BadRequest();
+        if (id != dto.OrderId) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest($"Dados inválidos.");
+        }
         
         var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
         
@@ -97,8 +105,10 @@ public class OrdersController : ControllerBase {
     [HttpDelete("order/{id:int}")]
     public async Task<ActionResult<Order>> DeleteOrder(int id) {
         var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
-        if (order is null)
-            return NotFound("Pedido não encontrado.");
+        if (order is null) {
+            _logger.LogWarning($"Pedido não encontrado.");
+            return NotFound($"Pedido não encontrado.");
+        }
         
         var orderDTO = new OrderDTO(
             order.OrderId,
