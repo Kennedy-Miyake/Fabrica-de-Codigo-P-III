@@ -35,11 +35,20 @@ public class CompaniesController : ControllerBase {
     }
 
     [HttpGet("company/{id:int}", Name = "GetCompany")]
-    public ActionResult<Company> Get(int id) {
-        var company = _context.Companies.AsNoTracking().FirstOrDefault(p => p.CompanyId == id);
+    public async Task<ActionResult<Company>> GetCompany(int id) {
+        var company = await _context.Companies.AsNoTracking().FirstOrDefaultAsync(p => p.CompanyId == id);
         if (company is null)
             return NotFound("Empresa não encontrada.");
-        return company;
+        
+        var companyDTO = new CompanyDTO(
+                                        company.CompanyId,
+                                        company.Name,
+                                        company.CNPJ,
+                                        company.Email,
+                                        company.Phone,
+                                        company.Address);
+
+        return Ok(companyDTO);
     }
 
     [HttpPost("company")]
