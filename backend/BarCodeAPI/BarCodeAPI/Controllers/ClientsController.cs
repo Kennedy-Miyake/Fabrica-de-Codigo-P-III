@@ -16,21 +16,20 @@ namespace BarCodeAPI.Controllers;
 public class ClientsController : ControllerBase
 {
     private readonly AppDbContext _context;
-    private readonly IEmailValidation _emailValidationService; // Injetar o serviço de validação
+    private readonly IEmailValidation _emailValidationService; 
 
-
-    // Modificar o construtor para incluir IEmailValidation
+    
     public ClientsController(AppDbContext context, IEmailValidation emailValidationService)
     {
         _context = context;
-        _emailValidationService = emailValidationService; // Atribuir o serviço injetado
+        _emailValidationService = emailValidationService; 
     }
 
     [HttpGet]
     public ActionResult<IEnumerable<Client>> Get()
     {
         var clients = _context.Clients.AsNoTracking().Take(10).ToList();
-        if (clients is null || !clients.Any()) // Ajustado para verificar se a lista está vazia também
+        if (clients is null || !clients.Any()) 
             return NotFound("Clientes não encontrados...");
         return clients;
     }
@@ -45,7 +44,7 @@ public class ClientsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post(Client client) // Alterado para async Task<ActionResult>
+    public async Task<ActionResult> Post(Client client) 
     {
         if (client is null || client.Email is null) // client.Email não pode ser nulo para validação
             return BadRequest("Dados do cliente inválidos.");
@@ -55,14 +54,7 @@ public class ClientsController : ControllerBase
         {
             return BadRequest("Formato de e-mail inválido.");
         }
-
-        // Validar o domínio do e-mail (opcional, dependendo da sua regra de negócio)
-        // if (!_emailValidationService.IsValidDomain(client.Email))
-        // {
-        //     return BadRequest("Domínio de e-mail não permitido.");
-        // }
-
-        // Validar se o e-mail é único
+        
         if (!await _emailValidationService.IsEmailUniqueAsync(client.Email))
         {
             return BadRequest("Este e-mail já está cadastrado.");
@@ -86,9 +78,6 @@ public class ClientsController : ControllerBase
             {
                 return BadRequest("Formato de e-mail inválido.");
             }
-            // Opcionalmente, verificar a unicidade do e-mail aqui também,
-            // mas cuidado para não conflitar com o e-mail atual do próprio cliente que está sendo editado.
-            // Uma lógica mais elaborada seria necessária para a atualização.
         }
 
 
