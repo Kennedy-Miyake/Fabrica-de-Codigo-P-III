@@ -12,9 +12,11 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<OrdersController> _logger;
 
-    public OrdersController(AppDbContext context) {
+    public OrdersController(AppDbContext context, ILogger<OrdersController> logger) {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet("orders")]
