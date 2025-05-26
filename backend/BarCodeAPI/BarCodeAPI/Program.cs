@@ -4,7 +4,8 @@ using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using BarCode.Domain.Services;
 using BarCode.Infrastructure.Context;
-using BarCode.Infrastructure.Services; // Adicionar o namespace dos seus serviços de infraestrutura
+using BarCode.Infrastructure.Services;
+using BarCodeAPI.Filters;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -43,9 +44,12 @@ public class Program
                });
 
         // Add services to the container.
-        builder.Services.AddControllers().AddJsonOptions(options => {
-            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        });
+        builder.Services.AddControllers(options => {
+                   options.Filters.Add(typeof(ApiExceptionFilter));
+               })
+               .AddJsonOptions(options => {
+                   options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+               });
 
         // Define a política de cors para permitir o acesso do frontend
         builder.Services.AddCors(options =>

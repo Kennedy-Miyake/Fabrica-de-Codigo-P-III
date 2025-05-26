@@ -11,6 +11,7 @@ COPY ["backend/BarCodeAPI/BarCodeAPI/BarCodeAPI.csproj", "BarCodeAPI/BarCodeAPI/
 COPY ["backend/Shared/BarCode.Domain/BarCode.Domain/BarCode.Domain.csproj", "Shared/BarCode.Domain/BarCode.Domain/"]
 COPY ["backend/Shared/BarCode.Infrastructure/BarCode.Infrastructure/BarCode.Infrastructure.csproj", "Shared/BarCode.Infrastructure/BarCode.Infrastructure/"]
 COPY ["../tests/BarCode.Infrastructure.Tests/BarCode.Infrastructure.Tests/BarCode.Infrastructure.Tests.csproj", "../tests/BarCode.Infrastructure.Tests/BarCode.Infrastructure.Tests/"]
+COPY ["../tests/BarCodeAPI.Tests/BarCodeAPI.Tests/BarCodeAPI.Tests.csproj", "../tests/BarCodeAPI.Tests/BarCodeAPI.Tests/"]
 RUN dotnet restore "BarCodeAPI/BarCodeAPI.sln"
 
 # Copia somente o código da API

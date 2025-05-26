@@ -11,7 +11,7 @@
     </nav>
     <div class="flex space-x-4 mt-2">
         <a href="https://www.instagram.com/oficialtft/" target="_blank" rel="noopener" aria-label="Instagram">
-            <img src="../assets/Services/img/icons8-instagram.svg" alt="Instagram" class="w-12 h-12">
+            <img src="../assets/img/icons8-instagram.svg" alt="Instagram" class="w-12 h-12">
         </a>
     </div>
       <p class="text-xs italic">TECNOLOGIA COM PROPOSITO.</p>

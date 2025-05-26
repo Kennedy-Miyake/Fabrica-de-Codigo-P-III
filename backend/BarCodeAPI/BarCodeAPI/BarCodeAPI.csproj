@@ -29,6 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\BarCode.Infrastructure\BarCode.Infrastructure\BarCode.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\tests\BarCodeAPI.Tests\BarCodeAPI.Tests\BarCodeAPI.Tests.csproj" />
     </ItemGroup>
 
 </Project>
