@@ -50,14 +50,28 @@ public class ClientsController : ControllerBase {
     }
 
     [HttpPost("client")]
-    public ActionResult Post(Client client) {
-        if (client is null)
+    public async Task<ActionResult> CreateClient(ClientDTO? dto) {
+        if (dto is null)
             return BadRequest();
 
-        _context.Clients.Add(client);
-        _context.SaveChanges();
+        var client = new Client {
+            Name = dto.Name,
+            Email = dto.Email,
+            Phone = dto.Phone,
+            Address = dto.Address
+        };
 
-        return new CreatedAtRouteResult("GetClient", new { id = client.ClientId }, client);
+        _context.Clients.Add(client);
+        await _context.SaveChangesAsync();
+        
+        var clientDTO = new ClientDTO(
+                                  client.ClientId,
+                                  client.Name,
+                                  client.Email,
+                                  client.Phone,
+                                  client.Address);
+
+        return new CreatedAtRouteResult(nameof(GetClient), new { id = client.ClientId }, clientDTO);
     }
 
     [HttpPut("client/{id:int}")]
