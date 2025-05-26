@@ -22,8 +22,10 @@ public class CompaniesController : ControllerBase {
     [HttpGet("companies")]
     public async Task<ActionResult<IEnumerable<Company>>> GetAllCompanies() {
         var companies = await _context.Companies.AsNoTracking().Take(10).ToListAsync();
-        if (companies is null)
-            return NotFound("Empresas não encontradas...");
+        if (companies is null) {
+            _logger.LogWarning($"Nenhuma empresa encontrada.");
+            return NotFound($"Nenhuma empresa encontrada.");
+        }
 
         var companiesDTO = companies.Select(company => new CompanyDTO(
                                                                       company.CompanyId,
@@ -39,8 +41,10 @@ public class CompaniesController : ControllerBase {
     [HttpGet("company/{id:int}", Name = "GetCompany")]
     public async Task<ActionResult<Company>> GetCompany(int id) {
         var company = await _context.Companies.AsNoTracking().FirstOrDefaultAsync(p => p.CompanyId == id);
-        if (company is null)
-            return NotFound("Empresa não encontrada.");
+        if (company is null) {
+            _logger.LogWarning($"Nenhuma empresa com id = {id} encontrada.");   
+            return NotFound($"Nenhuma empresa com id = {id} encontrada.");
+        }
         
         var companyDTO = new CompanyDTO(
                                         company.CompanyId,
@@ -55,8 +59,10 @@ public class CompaniesController : ControllerBase {
 
     [HttpPost("company")]
     public async Task<ActionResult> CreateCompany(CompanyDTO dto) {
-        if (dto is null)
-            return BadRequest();
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest("Dados inválidos.");
+        }
 
         var company = new Company {
             CompanyId = dto.CompanyId,
@@ -75,13 +81,17 @@ public class CompaniesController : ControllerBase {
 
     [HttpPut("company/{id:int}")]
     public async Task<ActionResult> UpdateCompany(int id, CompanyDTO dto) {
-        if (id != dto.CompanyId)
-            return BadRequest();
+        if (id != dto.CompanyId) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest("Dados inválidos.");
+        }
         
         var company = await _context.Companies.FirstOrDefaultAsync(c => c.CompanyId == id);
-        
-        if (company is null)
-            return NotFound("Empresa não encontrada...");
+
+        if (company is null) {
+            _logger.LogWarning($"Nenhuma empresa encontrada.");   
+            return NotFound($"Empresa não encontrada.");
+        }
         
         company.Name = dto.Name;
         company.CNPJ = dto.CNPJ;
@@ -106,8 +116,10 @@ public class CompaniesController : ControllerBase {
     [HttpDelete("company/{id:int}")]
     public async Task<ActionResult> DeleteCompany(int id) {
         var company = await _context.Companies.FirstOrDefaultAsync(c => c.CompanyId == id);
-        if (company is null)
-            return NotFound("Empresa não encontrada...");
+        if (company is null) {
+            _logger.LogWarning($"Empresa não encontrada.");
+            return NotFound($"Empresa não encontrada.");
+        }
         
         var companyDTO = new CompanyDTO(
             company.CompanyId,
