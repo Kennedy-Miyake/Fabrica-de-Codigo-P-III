@@ -1,6 +1,6 @@
 <script setup>
 import ProductComponent from '../components/ProductComponent.vue'
-import initBarcodeScanner from '../assets/Services/Barcode.js'
+import initBarcodeScanner from '@/assets/services/Barcode.js'
 
 </script>
 
