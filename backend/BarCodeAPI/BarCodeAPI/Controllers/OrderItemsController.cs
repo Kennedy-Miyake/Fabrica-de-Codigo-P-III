@@ -9,11 +9,11 @@ namespace BarCodeAPI.Controllers;
 
 [Route("api/v1")]
 [ApiController]
-public class OrderItemController : ControllerBase {
+public class OrderItemsController : ControllerBase {
     private readonly AppDbContext _context;
     private readonly ICartService _cartService;
     
-    public OrderItemController(AppDbContext context, ICartService cartService) {
+    public OrderItemsController(AppDbContext context, ICartService cartService) {
         _context = context;
         _cartService = cartService;
     }
