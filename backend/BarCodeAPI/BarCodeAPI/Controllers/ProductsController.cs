@@ -14,13 +14,16 @@ namespace BarCodeAPI.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<ProductsController> _logger;
     private readonly IAutomaticRegistration _automaticRegistration;
     private readonly IBarCodeValidation _barCodeValidation;
 
-    public ProductsController(AppDbContext context, 
+    public ProductsController(AppDbContext context,
+                              ILogger<ProductsController> logger,
                               IAutomaticRegistration automaticRegistration, 
                               IBarCodeValidation barCodeValidation) {
         _context = context;
+        _logger = logger;
         _automaticRegistration = automaticRegistration;
         _barCodeValidation = barCodeValidation;
     }
