@@ -1,6 +1,18 @@
 <!-- src/components/ProductForm.vue -->
 <template>
   <form class="">
+    <!-- Campos do formulário -->
+    <!-- Imagem do Produto -->
+    <div>
+      <label class="block mb-1 font-medium">Imagem do Produto</label>
+      <input
+        v-model="form.image"
+        type="text"
+        class="w-full border rounded"
+        placeholder="URL da imagem"
+        required
+      />
+    </div>
   </form>
 </template>
 
