@@ -10,9 +10,11 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class ProductCompaniesController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<ProductCompaniesController> _logger;
     
-    public ProductCompaniesController(AppDbContext context) {
+    public ProductCompaniesController(AppDbContext context, ILogger<ProductCompaniesController> logger) {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet("products", Name = "GetProductCompanies")]
