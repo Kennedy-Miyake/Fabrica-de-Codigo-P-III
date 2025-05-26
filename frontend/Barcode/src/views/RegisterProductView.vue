@@ -1,5 +1,8 @@
 <template>
-  <h1 class="flex flex-col text-2xl font-semibold mb-4 items-center justify-center">Cadastrar Produto</h1>
+  <h1 class="flex flex-col text-3xl font-bold mb-4 items-center justify-center">Cadastrar Produto</h1>
+  <div class="max-w-lg mx-auto p-4">
+    <ProductForm @submit="onSubmit" />
+  </div>
 </template>
 
 <script>
