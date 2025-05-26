@@ -68,14 +68,28 @@ public class OrdersController : ControllerBase {
     }
 
     [HttpPut("order/{id:int}")]
-    public ActionResult<Order> Put(int id, Order order) {
-        if (id != order.OrderId)
+    public async Task<ActionResult<Order>> UpdateOrder(int id, OrderDTO dto) {
+        if (id != dto.OrderId)
             return BadRequest();
+        
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+        
+        order.DeliveryAddress = dto.DeliveryAddress;
+        order.OrderDate = dto.OrderDate;
+        order.OrderTotal = dto.OrderTotal;
+        order.ClientId = dto.ClientId;
 
         _context.Entry(order).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(order);
+        var orderDTO = new OrderDTO(
+            order.OrderId,
+            order.DeliveryAddress,
+            order.OrderDate,
+            order.OrderTotal,
+            order.ClientId);
+        
+        return Ok(orderDTO);
     }
 
     [HttpDelete("order/{id:int}")]
