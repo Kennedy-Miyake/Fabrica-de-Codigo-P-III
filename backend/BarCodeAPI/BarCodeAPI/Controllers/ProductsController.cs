@@ -133,14 +133,21 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("product/{id:int}")]
-    public ActionResult Delete(int id) {
-        var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+    public async Task<ActionResult> DeleteProduct(int id) {
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
         if (product is null)
             return NotFound("Produto não encontrado...");
+        
+        var productDTO = new ProductDTO(
+                                        product.ProductId,
+                                        product.Name,
+                                        product.Description,
+                                        product.ImageUrl,
+                                        product.BarCode);
 
         _context.Products.Remove(product);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        return Ok(product);
+        return Ok(productDTO);
     }
 }
