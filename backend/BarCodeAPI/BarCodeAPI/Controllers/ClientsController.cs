@@ -34,11 +34,19 @@ public class ClientsController : ControllerBase {
     }
 
     [HttpGet("client/{id:int}", Name = "GetClient")]
-    public ActionResult<Client> Get(int id) {
-        var client = _context.Clients.AsNoTracking().FirstOrDefault(p => p.ClientId == id);
+    public async Task<ActionResult<Client>> GetClient(int id) {
+        var client = await _context.Clients.AsNoTracking().FirstOrDefaultAsync(p => p.ClientId == id);
         if (client is null)
             return NotFound("Cliente não encontrado.");
-        return client;
+        
+        var clientDTO = new ClientDTO(
+                                      client.ClientId,
+                                      client.Name,
+                                      client.Email,
+                                      client.Phone,
+                                      client.Address);
+
+        return Ok(clientDTO);
     }
 
     [HttpPost("client")]
