@@ -10,11 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks; // Adicionar para Task
 
-
-
 namespace BarCodeAPI.Controllers;
 
-[Route("[controller]")]
+[Route("api/v1")]
 [ApiController]
 public class ClientsController : ControllerBase
 {
