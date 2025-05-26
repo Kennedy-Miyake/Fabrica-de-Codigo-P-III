@@ -3,6 +3,7 @@
 using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
+using BarCodeAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class ClientsController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<ClientsController> _logger;
 
-    public ClientsController(AppDbContext context) {
+    public ClientsController(AppDbContext context, ILogger<ClientsController> logger) {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet("clients")]
