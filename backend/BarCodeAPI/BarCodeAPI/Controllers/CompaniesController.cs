@@ -72,14 +72,33 @@ public class CompaniesController : ControllerBase {
     }
 
     [HttpPut("company/{id:int}")]
-    public ActionResult Put(int id, Company company) {
-        if (id != company.CompanyId)
+    public async Task<ActionResult> UpdateCompany(int id, CompanyDTO dto) {
+        if (id != dto.CompanyId)
             return BadRequest();
+        
+        var company = await _context.Companies.FirstOrDefaultAsync(c => c.CompanyId == id);
+        
+        if (company is null)
+            return NotFound("Empresa não encontrada...");
+        
+        company.Name = dto.Name;
+        company.CNPJ = dto.CNPJ;
+        company.Email = dto.Email;
+        company.Phone = dto.Phone;
+        company.Address = dto.Address;
 
         _context.Entry(company).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(company);
+        var companyDTO = new CompanyDTO(
+            company.CompanyId,
+            company.Name,
+            company.CNPJ,
+            company.Email,
+            company.Phone,
+            company.Address);
+        
+        return Ok(companyDTO);
     }
 
     [HttpDelete("company/{id:int}")]
