@@ -5,6 +5,22 @@
 </template>
 
 <script>
+export default {
+  name: 'ProductForm',
+  data() {
+    return {
+      form: {
+        image: '',
+        name: '',
+      }
+    };
+  },
+  methods: {
+    handleSubmit() {
+      this.$emit('submit', ...this.form);
+    }
+  }
+};
 </script>
 
 <style scoped>
