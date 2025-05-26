@@ -11,10 +11,12 @@ namespace BarCodeAPI.Controllers;
 [ApiController]
 public class OrderItemsController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<OrderItemsController> _logger;
     private readonly ICartService _cartService;
     
-    public OrderItemsController(AppDbContext context, ICartService cartService) {
+    public OrderItemsController(AppDbContext context, ILogger<OrderItemsController> logger, ICartService cartService) {
         _context = context;
+        _logger = logger;
         _cartService = cartService;
     }
 
