@@ -52,14 +52,23 @@ public class CompaniesController : ControllerBase {
     }
 
     [HttpPost("company")]
-    public ActionResult Post(Company company) {
-        if (company is null)
+    public async Task<ActionResult> CreateCompany(CompanyDTO dto) {
+        if (dto is null)
             return BadRequest();
+
+        var company = new Company {
+            CompanyId = dto.CompanyId,
+            Name = dto.Name,
+            CNPJ = dto.CNPJ,
+            Email = dto.Email,
+            Phone = dto.Phone,
+            Address = dto.Address
+        };
         
         _context.Companies.Add(company);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return CreatedAtRoute("GetCompany", new { id = company.CompanyId }, company);
+        return CreatedAtRoute(nameof(GetCompany), new { id = company.CompanyId }, dto);
     }
 
     [HttpPut("company/{id:int}")]
