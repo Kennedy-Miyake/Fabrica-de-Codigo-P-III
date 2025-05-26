@@ -75,14 +75,31 @@ public class ClientsController : ControllerBase {
     }
 
     [HttpPut("client/{id:int}")]
-    public ActionResult Put(int id, Client client) {
-        if (id != client.ClientId)
+    public async Task<ActionResult> Put(int id, ClientDTO dto) {
+        if (id != dto.ClientId)
             return BadRequest();
+        
+        var client = await _context.Clients.AsNoTracking().FirstOrDefaultAsync(c => c.ClientId == id);
+        
+        if (client is null)
+            return NotFound("Cliente não encontrado...");
 
+        client.Name = dto.Name;
+        client.Email = dto.Email;
+        client.Phone = dto.Phone;
+        client.Address = dto.Address;
+        
         _context.Entry(client).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
-        return Ok(client);
+        var clientDTO = new ClientDTO(
+                                  client.ClientId,
+                                  client.Name,
+                                  client.Email,
+                                  client.Phone,
+                                  client.Address);
+        
+        return Ok(clientDTO);
     }
 
     [HttpDelete("client/{id:int}")]
