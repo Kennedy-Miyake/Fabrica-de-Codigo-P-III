@@ -63,14 +63,20 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("product/{barcode}")]
-    public ActionResult<Product> GetByBarcode(string barcode) {
-        var product = _context.Products.AsNoTracking()
-            .FirstOrDefault(p => p.BarCode == barcode);
+    public async Task<ActionResult<Product>> GetProductByBarcode(string barcode) {
+        var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.BarCode == barcode);
 
         if (product is null)
             return NotFound("Produto não encontrado.");
+        
+        var productDTO = new ProductDTO(
+                                        product.ProductId,
+                                        product.Name,
+                                        product.Description,
+                                        product.ImageUrl,
+                                        product.BarCode);
 
-        return product;
+        return Ok(productDTO);
     }
 
     [HttpPost("product")]
