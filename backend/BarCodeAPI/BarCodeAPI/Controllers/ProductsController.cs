@@ -103,13 +103,33 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("product/{id:int}")]
-    public ActionResult<Product> Put(int id, Product product) {
-        if (id != product.ProductId)
+    public async Task<ActionResult<Product>> UpdateProduct(int id, ProductDTO dto) {
+        if (id != dto.ProductId)
             return BadRequest();
+        
+        var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
+        
+        product.Name = dto.Name;
+        product.Description = dto.Description;
+        product.ImageUrl = dto.ImageUrl;
+        if(_barCodeValidation.IsValid(dto.BarCode) &&
+           _barCodeValidation.IsValidBrazilianBarCode(dto.BarCode)) {
+            product.BarCode = dto.BarCode;
+        }
+        else
+            return BadRequest("Código de barras inválido.");
 
         _context.Entry(product).State = EntityState.Modified;
-        _context.SaveChanges();
-        return Ok(product);
+        await _context.SaveChangesAsync();
+        
+        var productDTO = new ProductDTO(
+                                        product.ProductId,
+                                        product.Name,
+                                        product.Description,
+                                        product.ImageUrl,
+                                        product.BarCode);
+        
+        return Ok(productDTO);
     }
 
     [HttpDelete("product/{id:int}")]
