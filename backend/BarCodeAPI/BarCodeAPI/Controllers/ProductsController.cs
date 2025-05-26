@@ -42,11 +42,19 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("product/{id:int}", Name = "GetProduct")]
-    public ActionResult<Product> Get(int id) {
-        var product = _context.Products.AsNoTracking().FirstOrDefault(p => p.ProductId == id);
+    public async Task<ActionResult<Product>> GetProduct(int id) {
+        var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
         if (product is null)
             return NotFound("Produto não encontrado.");
-        return product;
+       
+        var productDTO = new ProductDTO(
+                                        product.ProductId,
+                                        product.Name,
+                                        product.Description,
+                                        product.ImageUrl,
+                                        product.BarCode);
+
+        return Ok(productDTO);
     }
 
     [HttpGet("lookup/{barcode}")]
