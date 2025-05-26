@@ -103,14 +103,21 @@ public class ClientsController : ControllerBase {
     }
 
     [HttpDelete("client/{id:int}")]
-    public ActionResult Delete(int id) {
-        var client = _context.Clients.FirstOrDefault(p => p.ClientId == id);
+    public async Task<ActionResult> Delete(int id) {
+        var client = await _context.Clients.FirstOrDefaultAsync(p => p.ClientId == id);
         if (client is null)
             return NotFound("Cliente não encontrado...");
+        
+        var clientDTO = new ClientDTO(
+                                  client.ClientId,
+                                  client.Name,
+                                  client.Email,
+                                  client.Phone,
+                                  client.Address);
 
         _context.Clients.Remove(client);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(client);
+        return Ok(clientDTO);
     }
 }
