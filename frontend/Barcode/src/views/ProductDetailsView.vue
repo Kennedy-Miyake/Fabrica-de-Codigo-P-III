@@ -11,12 +11,14 @@
       </div>
     </div>
   </div>
+  <BuyAndCart />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
+import BuyAndCart from '../components/BuyAndCartComponent.vue'
 
 const route = useRoute()
 const barcode = route.params.barcode
