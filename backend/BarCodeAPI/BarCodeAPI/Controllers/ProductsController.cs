@@ -90,7 +90,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("product")]
-    public async Task<ActionResult<Product>> CreateProduct(ProductDTO dto) {
+    public async Task<ActionResult<Product>> CreateProduct(ProductCreateDTO dto) {
         var product = new Product();
         if (dto is null) {
             _logger.LogWarning($"Dados inválidos.");
