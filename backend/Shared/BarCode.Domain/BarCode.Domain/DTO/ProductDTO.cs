@@ -13,3 +13,15 @@ public record ProductDTO(
                                                          model.ImageUrl,
                                                          model.BarCode);
 }
+
+public record ProductCreateDTO(
+    string Name,
+    string Description,
+    string ImageUrl,
+    string BarCode) {
+    public ProductCreateDTO FromModel(ProductCreateDTO model) => new(
+                                                                      model.Name,
+                                                                      model.Description,
+                                                                      model.ImageUrl,
+                                                                      model.BarCode);
+}
