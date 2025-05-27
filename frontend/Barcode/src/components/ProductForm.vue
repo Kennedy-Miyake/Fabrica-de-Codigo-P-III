@@ -6,7 +6,7 @@
     <div>
       <label class="block mb-1 font-medium">Imagem do Produto</label>
       <input
-        v-model="form.image"
+        v-model="form.imageurl"
         type="text"
         class="w-full border rounded"
         placeholder="URL da imagem"
@@ -64,17 +64,20 @@
 <script>
 export default {
   name: 'ProductForm',
+  emits: ['submitForm'],
   data() {
     return {
       form: {
-        image: '',
+        imageurl: '',
         name: '',
+        description: '',
+        barcode: ''
       }
     };
   },
   methods: {
     handleSubmit() {
-      this.$emit('submit', this.form);
+      this.$emit('submitForm', {...this.form });
     }
   }
 };
