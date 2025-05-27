@@ -14,6 +14,8 @@
       <!-- Centro: Barra de pesquisa -->
       <div class="flex-1 flex justify-center">
         <input
+          v-model="searchQuery"
+          @keyup.enter="onSearch"
           type="text"
           placeholder="Digite aqui seu código de barras"
           class="bg-transparent border-2 border-[#4facfe] text-white placeholder-[#4facfe] font-mono text-xl rounded-xl px-4 py-2 w-full max-w-xl shadow-[0_0_0_2px_#222_inset] focus:ring-2 focus:ring-[#4facfe] transition"
