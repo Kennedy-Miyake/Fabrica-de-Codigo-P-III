@@ -35,26 +35,11 @@
   </div>
 </template>
 
-<script>
-import { isSidebarOpen, toggleSidebar } from '@/assets/services/SideBar.js'
-import SideBarComponent from './SideBarComponent.vue'
-
-export default {
-  components: {
-    SideBarComponent,
-  },
-  setup() {
-    return {
-      isSidebarOpen,
-      toggleSidebar,
-    }
-  },
-}
-</script>
-
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { isSidebarOpen, toggleSidebar } from '../assets/services/SideBar.js'
+import SideBarComponent from './SideBarComponent.vue'
 
 const searchQuery = ref('')
 const router = useRouter()
