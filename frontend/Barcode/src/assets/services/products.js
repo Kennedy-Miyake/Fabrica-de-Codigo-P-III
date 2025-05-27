@@ -1,7 +1,7 @@
 import api from './api';
 
 export function createProduct(dto) {
-    return api.post('/products', dto);
+    return api.post('/product', dto);
 }
 
 export function getAllProducts() {
