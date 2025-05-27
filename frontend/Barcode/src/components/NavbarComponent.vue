@@ -49,3 +49,20 @@ export default {
   },
 }
 </script>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const searchQuery = ref('')
+const router = useRouter()
+
+function onSearch() {
+  const code = searchQuery.value.trim()
+  if(!code) return
+
+  router.push({ name: 'ProductDetails', params: { barcode: code } })
+
+  searchQuery.value = ''
+}
+</script>
