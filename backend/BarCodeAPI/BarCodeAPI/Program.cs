@@ -34,7 +34,9 @@ public class Program
                                                         options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
         builder.Services
                .AddScoped<IAutomaticRegistration, AutomaticRegistration>()
-               .AddScoped<IEmailValidation, EmailValidation>() // <<<--- Registrar o serviço de validação de e-mail aqui
+               .AddScoped<IEmailValidation, EmailValidation>()
+               .AddScoped<IBarCodeValidation, Ean13BarCodeValidator>()
+               .AddScoped<ICartService, CartService>()
                .AddHttpClient<IBlueSoftCosmosClient, BlueSoftCosmosClient>((sp, client) => {
                    var cfg = sp.GetRequiredService<IConfiguration>();
                    client.BaseAddress = new Uri("https://api.cosmos.bluesoft.com.br/");
