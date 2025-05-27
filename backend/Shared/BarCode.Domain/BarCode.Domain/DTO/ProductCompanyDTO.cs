@@ -10,3 +10,11 @@ public record ProductCompanyDTO(int ProductCompanyId, int ProductId, int Company
                                                                     model.Price,
                                                                     model.Stock);
 }
+
+public record ProductCompanyByBarcodeDTO(int ProductId, int CompanyId, decimal Price, int Stock) {
+    public ProductCompanyByBarcodeDTO FromModel(ProductCompanyByBarcodeDTO model) => new(
+         model.ProductId,
+         model.CompanyId,
+         model.Price,
+         model.Stock);
+}
