@@ -1,5 +1,8 @@
 <template>
   <div class="max-w-lg mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4 text-center">Cadastrar Produto</h1>
+    <ProductForm @submitForm="onSubmit" :loading="loading" />
+    <p v-if="message" :class="messageColor" class="mt-4">{{ message }}</p>
   </div>
 </template>
 
