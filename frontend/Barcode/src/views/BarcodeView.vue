@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import initBarcodeScanner from '../assets/Services/Barcode.js'
+import initBarcodeScanner from '@/assets/services/Barcode.js'
 
 onMounted(() => {
   initBarcodeScanner()

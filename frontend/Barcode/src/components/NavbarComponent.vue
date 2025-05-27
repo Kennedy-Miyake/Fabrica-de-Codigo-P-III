@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { isSidebarOpen, toggleSidebar } from '../assets/Services/SideBar.js'
+import { isSidebarOpen, toggleSidebar } from '@/assets/services/SideBar.js'
 import SideBarComponent from './SideBarComponent.vue'
 
 export default {
