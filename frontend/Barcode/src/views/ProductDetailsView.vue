@@ -25,11 +25,15 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
+import { getProductCompaniesByBarcode } from "../assets/services/productCompanies.js";
+import CompanyCardComponent from "../components/CompanyCardComponent.vue";
 
 const route = useRoute()
 const barcode = route.params.barcode
 
 const product = ref(null)
+
+const productCompanies = ref(null)
 
 const loading = ref(true)
 const error = ref('')
@@ -46,7 +50,21 @@ const fetchProduct = async() => {
   }
 }
 
+const fetchProductCompanies = async() => {
+  try {
+    const { data } = await getProductCompaniesByBarcode(barcode)
+    productCompanies.value = data
+    console.log(productCompanies.value, 'Empresas que vendem o produto')
+  } catch (error) {
+    console.error(error)
+    error.value = 'Não foi possível carregar as empresas'
+  } finally {
+    loading.value = false
+  }
+}
+
 onMounted(async () => {
   fetchProduct()
+  fetchProductCompanies()
 });
 </script>
