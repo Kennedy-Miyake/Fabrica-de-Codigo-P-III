@@ -18,12 +18,16 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
+import { getProductCompaniesByBarcode } from '../assets/services/productCompanies.js';
 import BuyAndCart from '../components/BuyAndCartComponent.vue'
 
 const route = useRoute()
 const barcode = route.params.barcode
 
 const product = ref(null)
+
+const productCompanies = ref()
+
 const loading = ref(true)
 const error = ref('')
 
