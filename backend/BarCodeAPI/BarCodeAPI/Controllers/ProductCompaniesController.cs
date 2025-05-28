@@ -47,6 +47,31 @@ public class ProductCompaniesController : ControllerBase {
         return new ProductCompanyDTO(product.ProductCompanyId, product.ProductId, product.CompanyId, product.Price, product.Stock);
     }
 
+    [HttpGet("/api/v1/companies/product/{barcode}")]
+    public ActionResult<IEnumerable<ProductCompanyWithCompanyDTO>> GetProductCompanyByBarCode(string barcode) {
+        var product = _context.Products.AsNoTracking().FirstOrDefault(pc => pc.BarCode == barcode);
+        if (product is null) {
+            _logger.LogWarning($"Produto com o código de barras {barcode} não encontrado.");
+            return NotFound($"Produto com o código de barras {barcode} não encontrado.");
+        }
+        
+        var productCompaniesDTO = _context.ProductCompanies
+                                       .AsNoTracking()
+                                       .Where(pc => pc.ProductId == product.ProductId)
+                                       .Include(pc => pc.Company)
+                                       .Select(pc => new ProductCompanyWithCompanyDTO(
+                                                    pc.ProductCompanyId,
+                                                    pc.ProductId,
+                                                    pc.Price,
+                                                    pc.Stock,
+                                                    new CompanyCardToBuyProductDTO(
+                                                         pc.Company.CompanyId,
+                                                         pc.Company.Name)))
+                                       .ToList();
+
+        return productCompaniesDTO;
+    }
+
     [HttpPost("product")]
     public ActionResult Post(int companyId, [FromBody] ProductCompanyDTO? dto) {
         if (dto is null || dto.CompanyId != companyId) {
