@@ -34,16 +34,19 @@ const product = ref(null)
 const loading = ref(true)
 const error = ref('')
 
-onMounted(async () => {
+const fetchProduct = async() => {
   try {
     const { data } = await getProductByBarcode(barcode)
     product.value = data
-
-  } catch(error) {
+  } catch (error) {
     console.error(error)
     error.value = 'Não foi possível carregar o produto.'
   } finally {
     loading.value = false
   }
+}
+
+onMounted(async () => {
+  fetchProduct()
 });
 </script>
