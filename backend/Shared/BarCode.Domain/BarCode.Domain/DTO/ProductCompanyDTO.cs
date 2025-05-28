@@ -18,3 +18,12 @@ public record ProductCompanyByBarcodeDTO(int ProductId, int CompanyId, decimal P
          model.Price,
          model.Stock);
 }
+
+public record ProductCompanyWithCompanyDTO(int ProductCompanyId, int ProductId, decimal Price, int Stock, CompanyCardToBuyProductDTO Company) {
+    public ProductCompanyWithCompanyDTO FromModel(ProductCompanyWithCompanyDTO model) => new(
+         model.ProductCompanyId,
+         model.ProductId,
+         model.Price,
+         model.Stock,
+         model.Company);
+}
