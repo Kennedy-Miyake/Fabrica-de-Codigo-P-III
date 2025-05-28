@@ -16,3 +16,9 @@ public record CompanyDTO(
         model.Phone,
         model.Address);
 }
+
+public record CompanyCardToBuyProductDTO(int CompanyId, string? Name) {
+    public CompanyCardToBuyProductDTO FromModel(CompanyCardToBuyProductDTO model) => new(
+         model.CompanyId,
+         model.Name);
+}
