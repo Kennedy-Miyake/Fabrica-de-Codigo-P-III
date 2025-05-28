@@ -1,5 +1,6 @@
 <template>
-  <div class="bg-gray-500 p-6 max-w-xl mx-auto mt-[100px]">
+  <!-- Informação do Produto -->
+  <section class="bg-gray-500 p-6 max-w-xl mx-auto mt-[100px]">
     <div v-if="loading">Carregando...</div>
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
     <div v-else class="flex flex-col items-center gap-4 space-y-4">
@@ -10,25 +11,25 @@
         <p class="text-sm text-black bg-white">{{ product.description }}</p>
       </div>
     </div>
-  </div>
-  <BuyAndCart />
+  </section>
+
+  <!-- Informação das Empresas que Vendem o Produto Acima -->
+  <section class="bg-red-500 mt-6 max-w-1xl w-full mx-auto">
+    <h1 class="text-2xl font-semibold text-black max-w-md mx-auto">Empresas que vendem o produto</h1>
+    <div class="flex bg-blue-600 h-[400px] justify-center items-center">
+    </div>
+  </section>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
-import { getProductCompaniesByBarcode } from '../assets/services/productCompanies.js';
-import BuyAndCart from '../components/BuyAndCartComponent.vue'
 
 const route = useRoute()
 const barcode = route.params.barcode
 
-// Informação do produto
 const product = ref(null)
-
-// Informação do produto referente a empresa
-const productCompanies = ref()
 
 const loading = ref(true)
 const error = ref('')
@@ -38,8 +39,6 @@ onMounted(async () => {
     const { data } = await getProductByBarcode(barcode)
     product.value = data
 
-    const { data: dataProductCompanies } = await getProductCompaniesByBarcode(barcode)
-    productCompanies.value = dataProductCompanies
   } catch(error) {
     console.error(error)
     error.value = 'Não foi possível carregar o produto.'
