@@ -24,8 +24,10 @@ import BuyAndCart from '../components/BuyAndCartComponent.vue'
 const route = useRoute()
 const barcode = route.params.barcode
 
+// Informação do produto
 const product = ref(null)
 
+// Informação do produto referente a empresa
 const productCompanies = ref()
 
 const loading = ref(true)
@@ -35,6 +37,9 @@ onMounted(async () => {
   try {
     const { data } = await getProductByBarcode(barcode)
     product.value = data
+
+    const { data: dataProductCompanies } = await getProductCompaniesByBarcode(barcode)
+    productCompanies.value = dataProductCompanies
   } catch(error) {
     console.error(error)
     error.value = 'Não foi possível carregar o produto.'
