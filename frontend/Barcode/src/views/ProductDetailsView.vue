@@ -1,10 +1,10 @@
 <template>
   <!-- Informação do Produto -->
-  <section class="bg-gray-500 p-6 max-w-xl mx-auto mt-[100px]">
-    <div v-if="loading">Carregando...</div>
-    <div v-else-if="error" class="text-red-500">{{ error }}</div>
-    <div v-else class="flex flex-col items-center gap-4 space-y-4">
-      <h3 class="text-2xl font-bold text-black">{{ product.name }}</h3>
+  <section class="bg-white/90 shadow-xl backdrop-blur-md rounded-2xl p-8 max-w-xl mx-auto mt-32 border border-neutral-200">
+    <div v-if="loading" class="text-center text-neutral-500 text-lg py-10">Carregando...</div>
+    <div v-else-if="error" class="text-red-500 text-center font-semibold py-6">{{ error }}</div>
+    <div v-else class="flex flex-col items-center gap-6">
+      <h3 class="text-3xl font-bold text-neutral-800 tracking-tight mb-2">{{ product.name }}</h3>
       <p class="text-sm text-black">{{ product.imageUrl }}</p>
       <div class="flex flex-col items-center">
         <h3 class="text-2xl font-bold text-black bg-red-500">Descrição</h3>
