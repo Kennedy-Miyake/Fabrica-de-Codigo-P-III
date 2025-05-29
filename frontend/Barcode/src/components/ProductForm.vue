@@ -40,11 +40,11 @@
 
     <!-- Código de Barras -->
     <div>
-      <label class="block mb-1 font-medium">Código de Barras</label>
+      <label class="block mb-1 font-semibold text-neutral-300">Código de Barras</label>
       <input
         v-model="form.barcode"
         type="text"
-        class="w-full border rounded"
+        class="w-full border border-neutral-700 bg-neutral-800 text-neutral-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-neutral-500 transition"
         placeholder="Código de barras"
         required
       />
