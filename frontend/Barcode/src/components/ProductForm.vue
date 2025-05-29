@@ -51,10 +51,10 @@
     </div>
 
     <!-- Botão de Enviar -->
-    <div class="flex flex-col">
+    <div class="flex flex-col items-center">
       <button
         type="submit"
-        class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+        class="mt-6 w-full bg-gradient-to-r from-green-500 to-lime-500 hover:from-green-600 hover:to-lime-600 text-neutral-900 font-bolt px-4 py-2 rounded-xl shadow-md hover:scale-105 transition-all duaration-200">
         Cadastrar
       </button>
     </div>
