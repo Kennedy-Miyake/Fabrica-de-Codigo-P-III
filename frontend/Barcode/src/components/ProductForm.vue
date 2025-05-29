@@ -16,11 +16,11 @@
 
     <!-- Nome do Produto -->
     <div>
-      <label class="block mb-1 font-medium">Nome do Produto</label>
+      <label class="block mb-1 font-semibold text-neutral-300">Nome do Produto</label>
       <input
         v-model="form.name"
         type="text"
-        class="w-full border rounded"
+        class="w-full border border-neutral-700 bg-neutral-800 text-neutral-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 placeholder:text-neutral-500 transition"
         placeholder="Nome do produto"
         required
       />
