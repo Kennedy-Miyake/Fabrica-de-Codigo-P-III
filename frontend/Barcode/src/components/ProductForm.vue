@@ -1,6 +1,6 @@
 <!-- src/components/ProductForm.vue -->
 <template>
-  <form @submit.prevent="handleSubmit" class="max-x-md mx-auto space-y-4 border rounded-lg">
+  <form @submit.prevent="handleSubmit" class="max-x-md mx-auto mt-12 bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl p-8 space-y-5">
     <!-- Campos do formulário -->
     <!-- Imagem do Produto -->
     <div>
