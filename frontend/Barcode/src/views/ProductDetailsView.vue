@@ -28,25 +28,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
 import { getProductCompaniesByBarcode } from "../assets/services/productCompanies.js";
 import CompanyCard from "../components/CompanyCardComponent.vue";
 
 const route = useRoute()
-const barcode = route.params.barcode
 
 const product = ref(null)
-
 const productCompanies = ref(null)
-
 const loading = ref(true)
 const error = ref('')
 
 const fetchProduct = async() => {
   try {
-    const { data } = await getProductByBarcode(barcode)
+    const { data } = await getProductByBarcode(route.params.barcode)
     product.value = data
   } catch (error) {
     console.error(error)
@@ -58,7 +55,7 @@ const fetchProduct = async() => {
 
 const fetchProductCompanies = async() => {
   try {
-    const { data } = await getProductCompaniesByBarcode(barcode)
+    const { data } = await getProductCompaniesByBarcode(route.params.barcode)
     productCompanies.value = data
     console.log(productCompanies.value, 'Empresas que vendem o produto')
   } catch (error) {
@@ -69,8 +66,18 @@ const fetchProductCompanies = async() => {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   fetchProduct()
   fetchProductCompanies()
-});
+})
+
+watch(
+  () => route.params.barcode,
+  () => {
+    loading.value = true
+    error.value = ''
+    fetchProduct()
+    fetchProductCompanies()
+  }
+)
 </script>
