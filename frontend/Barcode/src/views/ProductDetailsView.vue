@@ -18,7 +18,7 @@
   <!-- Informação das Empresas que Vendem o Produto Acima -->
   <section class="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 mt-10 max-w-3xl w-full mx-auto rounded-2xl shadow-xl border border-blue-200 p-8">
     <h2 class="text-2xl font-bold text-white text-center mb-8 drop-shadow">Empresas que vendem o produto</h2>
-    <div class="fkex flex-wrap justify-center gap-6 min-h-[180px]">
+    <div class="flex flex-row justify-center gap-6 min-h-[180px]">
       <CompanyCard
         v-for="c in productCompanies"
         :company="c"
