@@ -28,6 +28,11 @@ const router = createRouter({
       path: '/products/:barcode',
       name: 'ProductDetails',
       component: ProductDetailsView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView.vue,
     }
   ],
 })
