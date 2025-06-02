@@ -31,16 +31,17 @@
     </form>
     <div class="text-center mt-6">
       <span class="text-gray-600">Não tem uma conta?</span>
-      <span
+      <RouterLink
+        to="/register"
         class="text-blue-600 font-semibold cursor-pointer hover:underline ml-1"
-        @click="registrar"
       >
         Cadastre-se
-      </span>
+      </RouterLink>
     </div>
   </div>
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router'
 
 </script>
