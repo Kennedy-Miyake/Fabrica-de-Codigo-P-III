@@ -6,6 +6,14 @@
         Finalizar Compra
       </button>
     </header>
+    <!-- Lista de Produtos -->
+    <div v-for="product in cartProducts" :key="product.id" class="mb-6">
+      <CartProductComponent
+        :product="product"
+        @remove="openRemoveModal(product)"
+        @quantityChange="changeQuantity(product, $event)"
+      />
+    </div>
    </section> 
 </template>   
 
