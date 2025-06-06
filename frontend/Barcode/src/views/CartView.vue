@@ -19,8 +19,14 @@
       <span class="text-xl font-semibold">Total:</span>
       <span class="text-2xl font-bold text-green-600">R$ {{ totalPrice }}</span>
     </div>
+    <!-- Modal Remover -->
+    <RemoveComponent
+      v-if="modalOpen"
+      :product="selectedProduct"
+      @confirm="removeProduct"
+      @cancel="modalOpen = false"
+    />
    </section>
-   
 </template>   
 
 <script setup>
