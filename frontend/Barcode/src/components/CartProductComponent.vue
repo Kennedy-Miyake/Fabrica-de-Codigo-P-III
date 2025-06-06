@@ -16,7 +16,7 @@
         @change="emitQuantityChange"
       />
       <button @click="$emit('remove')" class="ml-2 text-red-600 hover:text-red-800">
-        🗑️
+        <span>Remover Produto</span>
       </button>
     </div>
   </div>

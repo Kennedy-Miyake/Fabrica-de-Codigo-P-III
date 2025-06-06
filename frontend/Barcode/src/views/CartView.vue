@@ -14,7 +14,13 @@
         @quantityChange="changeQuantity(product, $event)"
       />
     </div>
-   </section> 
+    <!-- Resumo -->
+    <div class="border-t pt-6 flex justify-between items-center mt-8">
+      <span class="text-xl font-semibold">Total:</span>
+      <span class="text-2xl font-bold text-green-600">R$ {{ totalPrice }}</span>
+    </div>
+   </section>
+   
 </template>   
 
 <script setup>
