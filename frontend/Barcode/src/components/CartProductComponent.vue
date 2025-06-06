@@ -22,3 +22,18 @@
   </div>
 </template>
 
+<script setup>
+import { ref, watch } from 'vue'
+const props = defineProps(['product'])
+const emit = defineEmits(['remove', 'quantityChange'])
+
+const localQuantity = ref(props.product.quantity)
+
+watch(localQuantity, (val) => {
+  emit('quantityChange', val)
+})
+
+function emitQuantityChange() {
+  emit('quantityChange', localQuantity.value)
+}
+</script>
