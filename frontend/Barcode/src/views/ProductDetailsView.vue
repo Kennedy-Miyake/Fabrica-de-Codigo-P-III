@@ -18,11 +18,6 @@
         </p>
       </div>
 
-      <!-- botão de adicionar ao carrinho -->
-      <button @click="handleAddToCart"
-        class="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-        {{ cartLoading ? 'Adicionando...' : 'Adicionar ao Carrinho' }}
-      </button>
       <p v-if="cartMessage" :class="cartMessageType">{{ cartMessage }}</p>
     </div>
   </section>
