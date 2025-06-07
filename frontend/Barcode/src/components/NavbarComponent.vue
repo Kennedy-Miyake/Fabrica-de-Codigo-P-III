@@ -27,14 +27,22 @@
       <!-- Direita: Login -->
       <div class="flex items-center min-w-max">
         <router-link to="/login" class="ml-4 hover:text-emerald-400 transition">
-          <button class="bg-[#4facfe] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#8ce7fe] transition-colors shadow-md">
+          <button class="bg-[#4facfe] text-white font-semibold py-2 px-4 rounded-3xl hover:bg-[#8ce7fe] transition-colors shadow-md">
             Login
+          </button>
+        </router-link>
+      </div>
+      <div class="flex items-center min-w-max">
+        <router-link to="/register" class="ml-4 transition">
+          <button class="bg-[#4facfe] text-white font-semibold py-2 px-4 rounded-3xl  hover:bg-[#8ce7fe] transition-colors shadow-md">
+            Regiter
           </button>
         </router-link>
       </div>
     </nav>
     <SideBarComponent v-if="isSidebarOpen" @close="toggleSidebar" />
   </div>
+  
 </template>
 
 <script setup>
