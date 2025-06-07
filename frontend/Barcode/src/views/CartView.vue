@@ -17,8 +17,8 @@
           <img :src="item.imageUrl || 'placeholder.jpg'" alt="Produto" class="w-24 h-24 object-cover rounded-lg">
 
           <div class="flex-1">
-            <h3 class="font-semibold text-xl mb-1">{{ item.name }}</h3>
-            <p class="text-gray-600 mb-1">Vendido por: {{ item.companyName }}</p>
+            <h3 class="font-semibold text-xl mb-2">{{ item.productName }}</h3>
+            <p class="text-gray-600 mb-2">Vendido por: {{ item.companyName }}</p>
             <p class="text-lg font-bold text-green-600">R$ {{ item.price?.toFixed(2) }}</p>
           </div>
         </div>
@@ -63,7 +63,7 @@ onMounted(() => {
   if (Object.keys(params).length > 0) {
     const newItem = {
       productCompanyId: Number(params.productCompanyId),
-      name: params.name,
+      productName: params.productName,
       companyName: params.companyName,
       price: Number(params.price),
       imageUrl: params.imageUrl

@@ -49,7 +49,7 @@
 
     <!-- Companias -->
     <div v-else class="flex flex-row justify-center gap-6 min-h-[180px] flex-wrap">
-      <CompanyCard v-for="company in productCompanies" :key="company.companyId" :company="company" />
+      <CompanyCard v-for="company in productCompanies" :key="company.companyId" :company="company" :product="product" />
     </div>
   </section>
 </template>
@@ -68,7 +68,7 @@ const product = ref(null)
 const productCompanies = ref([])
 const loading = ref(true)
 const error = ref('')
-const companiesLoading = ref(false) 
+const companiesLoading = ref(false)
 
 // Novos estados para controle do carrinho
 const cartLoading = ref(false)
@@ -108,7 +108,7 @@ const fetchProduct = async () => {
   try {
     const { data } = await getProductByBarcode(route.params.barcode)
     product.value = data
-    
+
     // Chama fetchProductCompanies somente após ter os dados do produto
     await fetchProductCompanies(data.productId)
   } catch (error) {
