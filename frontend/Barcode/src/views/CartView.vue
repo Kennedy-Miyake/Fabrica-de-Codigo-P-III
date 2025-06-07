@@ -74,11 +74,14 @@
     <!-- POP-UP 2: Success -->
     <div
       v-if="success"
-      class="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+      class="fixed inset-1 flex flex-col items-center justify-center rounded-3xl bg-green-600/50 z-50 overflow-hidden"
     >
-      <div class="bg-green-600 text-white p-6 rounded-xl w-64 text-center font-semibold text-lg">
-        Compra finalizada
+      <div class="bg-white p-6 rounded-xl w-96 text-center space-y-2">
+        <p class="font-semibold text-lg text-green-700">Compra finalizada!</p>
+        <p class="text-base font-semibold text-lg text-gray-600">Boleto encaminhado para o seu e-mail !</p>
+        <p class="text-base text-gray-600">Obrigado, volte sempre 😉</p>
       </div>
+
     </div>
   </section>
 </template>
