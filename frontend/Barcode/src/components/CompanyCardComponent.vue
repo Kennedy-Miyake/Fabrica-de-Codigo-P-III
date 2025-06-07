@@ -1,9 +1,3 @@
-<script setup lang="ts">
-defineProps({
-  company: Object
-})
-</script>
-
 <template>
   <div class="bg-gray-500 w-[300px] h-[350px] m-6">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 m-4 ml-auto">
@@ -12,10 +6,21 @@ defineProps({
     <h3 class="flex mt-[30px] font-semibold text-black justify-center items-center">Imagem da Empresa</h3>
     <p class="flex mt-[30px] font-semibold text-black justify-center items-center">{{ company.company.name }}</p>
     <p class="flex mt-[70px] font-semibold text-black pl-[50px]">R${{ company.price }}</p>
-    <button class="flex mt-[30px] max-w-md mx-auto bg-green-600 hover:bg-green-700 text-black font-semibold justify-center items-center w-[200px] h-[50px]">Comprar</button>
+    <button @click="AdicionadoAoCarrinho" class="flex mt-[30px] max-w-md mx-auto bg-green-600 hover:bg-green-700 text-black font-semibold justify-center items-center w-[200px] h-[50px]">Comprar</button>
   </div>
 </template>
 
-<style scoped>
+<script setup lang="ts">
+import { Ref } from 'vue';
+import { PostOrderItem } from '../assets/services/cart';
 
+defineProps({
+  company: Object
+})
+function AdicionadoAoCarrinho() {
+  console.log(`Adicionado ao carrinho: Adicionou`);
+}
+</script>
+
+<style scoped>
 </style>

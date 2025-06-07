@@ -54,6 +54,9 @@ const cartProducts = ref([
 
 const modalOpen = ref(false)
 const selectedProduct = ref(null)
+const productCompanies = ref(null)
+
+
 
 const totalPrice = computed(() =>
   cartProducts.value.reduce((acc, p) => acc + p.price * p.quantity, 0).toFixed(2)
