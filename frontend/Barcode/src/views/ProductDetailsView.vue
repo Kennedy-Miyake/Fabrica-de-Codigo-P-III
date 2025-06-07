@@ -33,7 +33,7 @@
     <h2 class="text-2xl font-bold text-white text-center mb-8 drop-shadow">Empresas que vendem o produto</h2>
 
     <!-- carregando a pagina -->
-    <div v-if="loading" class="text-white text-center">
+    <div v-if="companiesLoading" class="text-white text-center">
       Carregando empresas...
     </div>
 
@@ -65,10 +65,10 @@ import CompanyCard from "../components/CompanyCardComponent.vue";
 const route = useRoute()
 
 const product = ref(null)
-const productCompanies = ref(null)
+const productCompanies = ref([])
 const loading = ref(true)
 const error = ref('')
-
+const companiesLoading = ref(false) 
 
 // Novos estados para controle do carrinho
 const cartLoading = ref(false)
@@ -103,72 +103,78 @@ const handleAddToCart = async () => {
 }
 
 const fetchProduct = async () => {
+  loading.value = true
+  error.value = ''
   try {
     const { data } = await getProductByBarcode(route.params.barcode)
     product.value = data
+    
+    // Chama fetchProductCompanies somente após ter os dados do produto
+    await fetchProductCompanies(data.productId)
   } catch (error) {
-    console.error(error)
+    console.error('Erro ao buscar produto:', error)
     error.value = 'Não foi possível carregar o produto.'
   } finally {
     loading.value = false
   }
 }
 
-const fetchProductCompanies = async () => {
+const fetchProductCompanies = async (productId) => {
+  if (!productId) {
+    console.error('ID do produto não fornecido')
+    return
+  }
+
+  companiesLoading.value = true
   try {
-    if (!product.value?.productId) {
-      console.error('ID do produto não encontrado')
-      return
-    }
-
-    // Busca todas as empresas primeiro
+    // Busca todas as empresas
     const { data: companies } = await getAllCompanies()
+    console.log('Empresas encontradas:', companies)
 
-    // Para cada empresa, verifica se tem o produto
-    const availableCompanies = []
-
-    for (const company of companies) {
+    // Array para armazenar as promessas
+    const companyPromises = companies.map(async (company) => {
       try {
-        const { data: productCompany } = await getProductInCompany(company.companyId, product.value.productId)
+        const { data: productCompany } = await getProductInCompany(company.companyId, productId)
         if (productCompany) {
-          // Combina os dados da empresa com os dados do produto naquela empresa
-          availableCompanies.push({
+          return {
             ...company,
             price: productCompany.price,
-            stock: productCompany.stock
-          })
+            stock: productCompany.stock,
+            productCompanyId: productCompany.productCompanyId
+          }
         }
       } catch (err) {
-        // Se der erro 404 significa que a empresa não tem o produto
         if (err.response?.status !== 404) {
           console.error(`Erro ao verificar produto na empresa ${company.companyId}:`, err)
         }
+        return null
       }
-    }
+    })
 
-    productCompanies.value = availableCompanies
-    console.log('Empresas encontradas:', availableCompanies)
+    // Aguarda todos os dados e filtra os resultados nulos
+    const results = await Promise.all(companyPromises)
+    productCompanies.value = results.filter(company => company !== null)
+    console.log('Empresas com o produto:', productCompanies.value)
 
   } catch (error) {
     console.error('Erro ao buscar empresas:', error)
     error.value = 'Não foi possível carregar as empresas'
   } finally {
-    loading.value = false
+    companiesLoading.value = false
   }
 }
 
+// Modifica o template para usar o novo loading
 onMounted(() => {
   fetchProduct()
-  fetchProductCompanies()
 })
 
 watch(
   () => route.params.barcode,
   () => {
-    loading.value = true
-    error.value = ''
-    fetchProduct()
-    fetchProductCompanies()
+    if (route.params.barcode) {
+      fetchProduct()
+    }
   }
 )
 </script>
