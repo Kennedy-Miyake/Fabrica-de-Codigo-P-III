@@ -6,13 +6,23 @@
     <div v-else class="flex flex-col items-center gap-6">
       <h3 class="text-3xl font-bold text-neutral-800 tracking-tight mb-2">{{ product.name }}</h3>
       <!-- Imagem do Produto -->
-      <img :src= product.imageUrl alt="">
-      <p> class="text-center text-neutral-500 text-lg py-4 break-all">{{ product.imageUrl }}</p>
+      <img :src="product.imageUrl" alt="">
+      <p class="text-center text-neutral-500 text-lg py-4 break-all">{{ product.imageUrl }}</p>
       <!--descriçao-->
       <div class="w-full flex flex-col items-center">
         <h4 class="text-lg font-semibold text-neutral-700 mb-1">Descrição</h4>
-        <p class="text-base text-neutral-900 bg-neutral-100 rounded-lg px-4 py-2 text-center w-full border border-neutral-200">{{ product.description }}</p>
+        <p class="text-base text-neutral-900 bg-neutral-100 rounded-lg px-4 py-2 text-center w-full border border-neutral-200">
+          {{ product.description }}
+        </p>
       </div>
+
+      <!-- botão de adicionar ao carrinho -->
+      <button
+        @click="handleAddToCart"
+        class="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+        {{ cartLoading ? 'Adicionando...' : 'Adicionar ao Carrinho' }}
+      </button>
+      <p v-if="cartMessage" :class="cartMessageType">{{ cartMessage }}</p>
     </div>
   </section>
 
@@ -44,7 +54,36 @@ const loading = ref(true)
 const error = ref('')
 
 
+// Novos estados para controle do carrinho
+const cartLoading = ref(false)
+const cartMessage = ref('')
+const cartMessageType = ref('')
 
+// Nova função para adicionar ao carrinho
+const handleAddToCart = async () => {
+  if (!product.value) {
+    cartMessage.value = 'Erro: Produto não encontrado'
+    cartMessageType.value = 'text-red-500'
+    return
+  }
+
+  cartLoading.value = true
+  try {
+    // Por enquanto só vamos mostrar uma mensagem de sucesso
+    cartMessage.value = 'Produto adicionado ao carrinho!'
+    cartMessageType.value = 'text-green-500'
+  } catch (err) {
+    console.error('Erro ao adicionar ao carrinho:', err)
+    cartMessage.value = 'Erro ao adicionar ao carrinho'
+    cartMessageType.value = 'text-red-500'
+  } finally {
+    cartLoading.value = false
+    // Limpa a mensagem após 3 segundos
+    setTimeout(() => {
+      cartMessage.value = ''
+    }, 3000)
+  }
+}
 
 const fetchProduct = async() => {
   try {
