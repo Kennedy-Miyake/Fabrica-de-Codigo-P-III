@@ -6,40 +6,31 @@
       <p class="text-xl font-bold text-green-600">R$ {{ company.price?.toFixed(2) }}</p>
       <p class="text-sm text-gray-600">Estoque: {{ company.stock }} unidades</p>
 
-      <button @click="handleAddToCart" :disabled="loading || company.stock === 0"
-        class="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
-        {{ loading ? 'Adicionando...' : company.stock === 0 ? 'Sem Estoque' : 'Comprar' }}
-      </button>
+      <router-link :to="{
+        name: 'cart',
+        query: {
+          productCompanyId: company.productCompanyId,
+          companyId: company.companyId,
+          companyName: company.name,
+          productId: company.productId,
+          price: company.price,
+          stock: company.stock
+        }
+      }"
+        class="w-full bg-green-600 hover:bg-green-700 text-white text-center font-semibold py-2 px-4 rounded-lg transition-colors">
+        Adicionar ao Carrinho
+      </router-link>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { PostOrderItem } from '../assets/services/cart'
-
-const props = defineProps({
+defineProps({
   company: {
     type: Object,
     required: true
   }
 })
-
-const loading = ref(false)
-
-async function handleAddToCart() {
-  if (loading.value || props.company.stock === 0) return
-
-  loading.value = true
-  try {
-    await PostOrderItem(props.company.companyId, props.productId, 1)
-    console.log('Produto adicionado ao carrinho!')
-  } catch (error) {
-    console.error('Erro ao adicionar ao carrinho:', error)
-  } finally {
-    loading.value = false
-  }
-}
 </script>
 
 <style scoped></style>
