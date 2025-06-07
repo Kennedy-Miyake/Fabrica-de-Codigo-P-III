@@ -58,13 +58,13 @@
     <!-- POP-UP 1: Loading -->
     <div
       v-if="loading"
-      class="fixed inset-0 flex flex-col items-center justify-center bg-black/50 z-50"
+      class="fixed inset-1 flex flex-col items-center justify-center rounded-3xl bg-neutral-500/50 z-50 overflow-hidden"
     >
       <div class="bg-white p-6 rounded-xl w-80 text-center">
         <p class="mb-3 font-semibold text-lg">Finalizando compra</p>
         <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
           <div
-            class="h-3 bg-green-600 transition-all duration-200"
+            class="h-3 bg-green-400 transition-all duration-200"
             :style="{ width: progress + '%' }"
           ></div>
         </div>
