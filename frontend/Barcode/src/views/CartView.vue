@@ -1,78 +1,89 @@
 <template>
-  <section class="max-w-2xl mx-auto mt-20 bg-white/90 rounded-2xl shadow-xl p-8 border border-neutral-200 relative">
+  <section class="max-w-4xl mx-auto mt-20 bg-white/90 rounded-2xl shadow-xl p-8 border border-neutral-200">
     <header class="flex justify-between items-center mb-8">
-      <h2 class="text-3xl font-bold text-neutral-800">Seu Carrinho de Compras</h2>
-      <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl font-semibold shadow">
-        Finalizar Compra
-      </button>
+      <h2 class="text-3xl font-bold text-neutral-800">Seu Carrinho</h2>
     </header>
+
     <!-- Lista de Produtos -->
-    <div v-for="product in cartProducts" :key="product.id" class="mb-6">
-      <CartProductComponent :product="product" @remove="openRemoveModal(product)"
-        @quantityChange="changeQuantity(product, $event)" />
+    <div class="space-y-6">
+      <div v-if="!cartItems.length" class="text-center text-gray-500 py-8">
+        Seu carrinho está vazio
+      </div>
+
+      <div v-for="item in cartItems" :key="item.productCompanyId"
+        class="flex items-center justify-between bg-white p-6 rounded-xl shadow border border-gray-100">
+        <!-- Informações do Produto -->
+        <div class="flex items-center gap-6 flex-1">
+          <img :src="item.imageUrl || 'placeholder.jpg'" alt="Produto" class="w-24 h-24 object-cover rounded-lg">
+
+          <div class="flex-1">
+            <h3 class="font-semibold text-xl mb-1">{{ item.name }}</h3>
+            <p class="text-gray-600 mb-1">Vendido por: {{ item.companyName }}</p>
+            <p class="text-lg font-bold text-green-600">R$ {{ item.price?.toFixed(2) }}</p>
+          </div>
+        </div>
+
+        <!-- Botão Remover -->
+        <button @click="removeItem(item)"
+          class="px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+          Remover
+        </button>
+      </div>
     </div>
-    <!-- Resumo -->
-    <div class="border-t pt-6 flex justify-between items-center mt-8">
-      <span class="text-xl font-semibold">Total:</span>
-      <span class="text-2xl font-bold text-green-600">R$ {{ totalPrice }}</span>
+
+    <!-- Total -->
+    <div v-if="cartItems.length" class="mt-8 pt-6 border-t">
+      <div class="flex justify-between items-center">
+        <span class="text-xl font-semibold">Total:</span>
+        <span class="text-2xl font-bold text-green-600">
+          R$ {{ totalPrice }}
+        </span>
+      </div>
     </div>
-    <!-- Modal Remover -->
-    <RemoveComponent v-if="modalOpen" :product="selectedProduct" @confirm="removeProduct" @cancel="modalOpen = false" />
   </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import CartProductComponent from '../components/CartProductComponent.vue'
-import RemoveComponent from '../components/RemoveComponent.vue'
 
 const route = useRoute()
-const cartProducts = ref([])
-const modalOpen = ref(false)
-const selectedProduct = ref(null)
+const cartItems = ref([])
 
-// Função para adicionar produto ao carrinho baseado nos query params
+// Calcula o preço total
+const totalPrice = computed(() => {
+  return cartItems.value
+    .reduce((total, item) => total + item.price, 0)
+    .toFixed(2)
+})
+
+// Adiciona item ao carrinho quando recebe os parâmetros da URL
 onMounted(() => {
   const params = route.query
   if (Object.keys(params).length > 0) {
-    // Adiciona o novo produto ao carrinho
-    const newProduct = {
-      id: params.productCompanyId,
-      productId: params.productId,
-      companyId: params.companyId,
-      name: params.productName,
+    const newItem = {
+      productCompanyId: Number(params.productCompanyId),
+      name: params.name,
       companyName: params.companyName,
       price: Number(params.price),
-      stock: Number(params.stock),
-      quantity: 1
+      imageUrl: params.imageUrl
     }
 
-    // Verifica se o produto já existe no carrinho
-    const existingProduct = cartProducts.value.find(p => p.id === newProduct.id)
-    if (!existingProduct) {
-      cartProducts.value.push(newProduct)
+    // Verifica se o item já existe no carrinho
+    const exists = cartItems.value.some(
+      item => item.productCompanyId === newItem.productCompanyId
+    )
+
+    if (!exists) {
+      cartItems.value.push(newItem)
     }
   }
 })
 
-const totalPrice = computed(() =>
-  cartProducts.value.reduce((acc, p) => acc + p.price * p.quantity, 0).toFixed(2)
-)
-
-function openRemoveModal(product) {
-  selectedProduct.value = product
-  modalOpen.value = true
-}
-
-function removeProduct() {
-  cartProducts.value = cartProducts.value.filter(p => p.id !== selectedProduct.value.id)
-  modalOpen.value = false
-}
-
-function changeQuantity(product, newQty) {
-  if (newQty <= product.stock) {
-    product.quantity = newQty
-  }
+// Remove item do carrinho
+function removeItem(item) {
+  cartItems.value = cartItems.value.filter(
+    i => i.productCompanyId !== item.productCompanyId
+  )
 }
 </script>
