@@ -17,7 +17,7 @@
     <button
       @click="AdicionadoAoCarrinho"
       class="mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 mx-auto">
-      Comprar
+      Adicionar ao Carrinho
     </button>
   </div>
 </template>

@@ -1,33 +1,64 @@
 <template>
-  <section class="max-w-2xl mx-auto mt-20 bg-white/90 rounded-2xl shadow-xl p-8 border border-neutral-200 relative">
-    <header class="flex justify-between items-center mb-8">
-      <h2 class="text-3xl font-bold text-neutral-800">Seu Carrinho de Compras</h2>
-      <button class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl font-semibold shadow">
+  <section
+    class="max-w-6xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-3 gap-6 bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-neutral-200 relative"
+  >
+    <!-- Header (span total das colunas em desktop) -->
+    <header class="flex justify-between items-center mb-8 lg:col-span-3 border-b pb-4">
+      <h2 class="text-3xl font-extrabold text-neutral-800">
+        Seu Carrinho de Compras
+      </h2>
+    </header>
+
+    <!-- Lista de Produtos (2/3 do grid em desktop) -->
+    <div class="space-y-6 lg:col-span-2">
+      <div
+        v-for="product in cartProducts"
+        :key="product.id"
+        class="bg-white rounded-xl shadow hover:shadow-lg transition-shadow duration-200 p-4 flex items-center gap-4"
+      >
+        <CartProductComponent
+          :product="product"
+          @remove="openRemoveModal(product)"
+          @quantityChange="changeQuantity(product, $event)"
+        />
+      </div>
+    </div>
+
+    <!-- Resumo (1/3 do grid em desktop) -->
+    <div
+      class="lg:col-span-1 bg-gray-50 rounded-xl p-6 shadow-md sticky top-24"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-lg font-medium text-neutral-700">Subtotal</span>
+        <span class="text-lg font-medium text-green-600">R$ {{ totalPrice }}</span>
+      </div>
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-base text-neutral-500">Frete</span>
+        <span class="text-base text-green-500">Gratis</span>
+      </div>
+      <div class="border-t pt-4 flex justify-between items-center">
+        <span class="text-xl font-bold text-neutral-800">Total</span>
+        <span class="text-2xl font-extrabold text-green-700">R$ {{ totalPrice }}</span>
+      </div>
+      <button
+        class="mt-6 w-full bg-green-500 hover:bg-green-800 text-white py-3 rounded-lg font-semibold shadow transition-colors duration-200"
+      >
         Finalizar Compra
       </button>
-    </header>
-    <!-- Lista de Produtos -->
-    <div v-for="product in cartProducts" :key="product.id" class="mb-6">
-      <CartProductComponent
-        :product="product"
-        @remove="openRemoveModal(product)"
-        @quantityChange="changeQuantity(product, $event)"
-      />
     </div>
-    <!-- Resumo -->
-    <div class="border-t pt-6 flex justify-between items-center mt-8">
-      <span class="text-xl font-semibold">Total:</span>
-      <span class="text-2xl font-bold text-green-600">R$ {{ totalPrice }}</span>
-    </div>
+
     <!-- Modal Remover -->
     <RemoveComponent
       v-if="modalOpen"
       :product="selectedProduct"
       @confirm="removeProduct"
       @cancel="modalOpen = false"
+      class="absolute inset-0 flex items-center justify-center bg-black/50"
     />
-   </section>
-</template>   
+  </section>
+</template>
+
+
 
 <script setup>
 import { ref, computed } from 'vue'
