@@ -1,52 +1,56 @@
 <template>
-  <!-- Informação do Produto -->
-  <section
-    class="bg-white/90 shadow-xl backdrop-blur-md rounded-2xl p-8 max-w-xl mx-auto mt-32 border border-neutral-200">
-    <div v-if="loading" class="text-center text-neutral-500 text-lg py-10">Carregando...</div>
-    <div v-else-if="error" class="text-red-500 text-center font-semibold py-6">{{ error }}</div>
-    <div v-else class="flex flex-col items-center gap-6">
-      <h3 class="text-3xl font-bold text-neutral-800 tracking-tight mb-2">{{ product.name }}</h3>
-      <!-- Imagem do Produto -->
-      <img :src="product.imageUrl" alt="">
-      <p class="text-center text-neutral-500 text-lg py-4 break-all">{{ product.imageUrl }}</p>
-      <!--descriçao-->
-      <div class="w-full flex flex-col items-center">
-        <h4 class="text-lg font-semibold text-neutral-700 mb-1">Descrição</h4>
-        <p
-          class="text-base text-neutral-900 bg-neutral-100 rounded-lg px-4 py-2 text-center w-full border border-neutral-200">
-          {{ product.description }}
-        </p>
+  <!-- Container principal -->
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- Card de detalhes do produto -->
+    <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div v-if="loading" class="text-center text-neutral-500 text-lg py-10">Carregando...</div>
+      <div v-else-if="error" class="text-red-500 text-center font-semibold py-6">{{ error }}</div>
+      <div v-else class="flex flex-col md:flex-row">
+        <!-- Imagem do produto -->
+        <div class="md:w-1/2 p-6">
+          <img :src="product.imageUrl" alt="Produto" class="w-full h-[400px] object-cover rounded-xl shadow-md">
+        </div>
+
+        <!-- Informações do produto -->
+        <div class="md:w-1/2 p-8 flex flex-col justify-between bg-gradient-to-br from-gray-50 to-gray-100">
+          <div class="space-y-4">
+            <h1 class="text-3xl font-bold text-gray-800">{{ product.name }}</h1>
+            <p class="text-gray-600">{{ product.description }}</p>
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <span class="text-sm font-medium text-blue-600">Código de Barras:</span>
+              <p class="font-mono text-blue-800">{{ product.barCode }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Card das empresas -->
+    <section class="bg-white rounded-2xl shadow-xl p-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Disponível em</h2>
+
+      <!-- carregando -->
+      <div v-if="companiesLoading" class="text-center text-gray-500 py-4">
+        Carregando empresas...
       </div>
 
-      <p v-if="cartMessage" :class="cartMessageType">{{ cartMessage }}</p>
-    </div>
-  </section>
+      <!-- Verifica erro -->
+      <div v-else-if="error" class="text-red-500 text-center py-4">
+        {{ error }}
+      </div>
 
-  <!-- Informação das Empresas que Vendem o Produto Acima -->
-  <section
-    class="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 mt-10 max-w-3xl w-full mx-auto rounded-2xl shadow-xl border border-blue-200 p-8">
-    <h2 class="text-2xl font-bold text-white text-center mb-8 drop-shadow">Empresas que vendem o produto</h2>
+      <!-- Caso não tennha empresas vendendo o produto  -->
+      <div v-else-if="!productCompanies?.length" class="text-center text-gray-500 py-8">
+        Nenhuma empresa encontrada vendendo este produto.
+      </div>
 
-    <!-- carregando a pagina -->
-    <div v-if="companiesLoading" class="text-white text-center">
-      Carregando empresas...
-    </div>
-
-    <!-- Erro -->
-    <div v-else-if="error" class="text-red-200 text-center">
-      {{ error }}
-    </div>
-
-    <!-- Companias não cadastradas -->
-    <div v-else-if="!productCompanies?.length" class="text-white text-center">
-      Nenhuma empresa encontrada vendendo este produto.
-    </div>
-
-    <!-- Companias -->
-    <div v-else class="flex flex-row justify-center gap-6 min-h-[180px] flex-wrap">
-      <CompanyCard v-for="company in productCompanies" :key="company.companyId" :company="company" :product="product" />
-    </div>
-  </section>
+      <!-- Companias grid -->
+      <div v-else class="grid grid-cols-1 gap-4">
+        <CompanyCard v-for="company in productCompanies" :key="company.companyId" :company="company"
+          :product="product" />
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup>
@@ -65,12 +69,12 @@ const loading = ref(true)
 const error = ref('')
 const companiesLoading = ref(false)
 
-// Novos estados para controle do carrinho
+// controle do carrinho
 const cartLoading = ref(false)
 const cartMessage = ref('')
 const cartMessageType = ref('')
 
-// Nova função para adicionar ao carrinho
+// adicionar ao carrinho
 const handleAddToCart = async () => {
   if (!product.value || !productCompanies.value?.[0]) {
     cartMessage.value = 'Erro: Produto não encontrado'
@@ -151,7 +155,7 @@ const fetchProductCompanies = async (productId) => {
   }
 }
 
-// Modifica o template para usar o novo loading
+//usar tela de carregamento
 onMounted(() => {
   fetchProduct()
 })

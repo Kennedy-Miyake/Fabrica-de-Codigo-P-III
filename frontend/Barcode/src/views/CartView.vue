@@ -37,7 +37,7 @@
                 <span class="text-lg font-bold">+</span>
               </button>
 
-              <!-- Indicador de estoque (opcional) -->
+              <!-- Indicador de estoque -->
               <span v-if="item.stock" class="text-sm text-gray-500">
                 ({{ item.stock - item.quantity }} restantes)
               </span>
@@ -48,7 +48,7 @@
         <!-- Botão Remover -->
         <button @click="removeItem(item.productCompanyId)"
           class="px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-          Remover
+          <b>Remover</b>
         </button>
       </div>
     </div>
@@ -73,7 +73,7 @@
       </button>
     </div>
 
-    <!-- Loading Modal -->
+    <!-- Carregamento compra -->
     <div v-if="loading"
       class="fixed inset-1 flex flex-col items-center justify-center rounded-3xl bg-neutral-500/50 z-50 overflow-hidden">
       <div class="bg-white p-6 rounded-xl w-80 text-center">
@@ -84,7 +84,7 @@
       </div>
     </div>
 
-    <!-- Success Modal -->
+    <!-- Successo na compra -->
     <div v-if="success"
       class="fixed inset-1 flex flex-col items-center justify-center rounded-3xl bg-green-600/50 z-50 overflow-hidden">
       <div class="bg-white p-6 rounded-xl w-96 text-center space-y-2">
@@ -116,7 +116,7 @@ const saveItems = () => {
   localStorage.setItem('cartItems', JSON.stringify(cartItems.value))
 }
 
-// Funções simplificadas para manipulação do carrinho
+// Funções para manipulação do carrinho
 const increaseQuantity = (item) => {
   if (!item.stock || item.quantity >= item.stock) {
     console.log('Limite de estoque atingido')
