@@ -1,17 +1,19 @@
 <template>
-  <section class="max-w-4xl mx-auto mt-20 bg-white/90 rounded-2xl shadow-xl p-8 border border-neutral-200">
-    <header class="flex justify-between items-center mb-8">
-      <h2 class="text-3xl font-bold text-neutral-800">Seu Carrinho</h2>
+  <section
+    class="max-w-6xl mx-auto mt-20 grid grid-cols-1 lg:grid-cols-3 gap-6 bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-neutral-200 relative">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8 lg:col-span-3 border-b pb-4">
+      <h2 class="text-3xl font-extrabold text-neutral-800">Seu Carrinho de Compras</h2>
     </header>
 
-    <!-- Lista de Produtos -->
-    <div class="space-y-6">
+    <!-- Lista de Produtos (2/3 do grid) -->
+    <div class="space-y-6 lg:col-span-2">
       <div v-if="!cartItems.length" class="text-center text-gray-500 py-8">
         Seu carrinho está vazio
       </div>
 
       <div v-for="item in cartItems" :key="item.productCompanyId"
-        class="flex items-center justify-between bg-white p-6 rounded-xl shadow border border-gray-100">
+        class="bg-white rounded-xl shadow hover:shadow-lg transition-shadow duration-200 p-6 flex items-center justify-between">
         <!-- Informações do Produto -->
         <div class="flex items-center gap-6 flex-1">
           <img :src="item.imageUrl || 'placeholder.jpg'" alt="Produto" class="w-24 h-24 object-cover rounded-lg">
@@ -21,7 +23,7 @@
             <p class="text-gray-600 mb-2">Vendido por: {{ item.companyName }}</p>
             <p class="text-lg font-bold text-green-600">R$ {{ (item.price * item.quantity).toFixed(2) }}</p>
 
-            <!-- Controles de quantidade simplificados -->
+            <!-- Controles de quantidade -->
             <div class="flex items-center gap-4 mt-4">
               <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1"
                 class="w-8 h-8 rounded-full bg-neutral-200 hover:bg-neutral-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
@@ -51,13 +53,44 @@
       </div>
     </div>
 
-    <!-- Total -->
-    <div v-if="cartItems.length" class="mt-8 pt-6 border-t">
-      <div class="flex justify-between items-center">
-        <span class="text-xl font-semibold">Total:</span>
-        <span class="text-2xl font-bold text-green-600">
-          R$ {{ totalPrice }}
-        </span>
+    <!-- Resumo (1/3 do grid) -->
+    <div v-if="cartItems.length" class="lg:col-span-1 bg-gray-50 rounded-xl p-6 shadow-md sticky top-24">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-lg font-medium text-neutral-700">Subtotal</span>
+        <span class="text-lg font-medium text-green-600">R$ {{ totalPrice }}</span>
+      </div>
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-base text-neutral-500">Frete</span>
+        <span class="text-base text-green-500">Grátis</span>
+      </div>
+      <div class="border-t pt-4 flex justify-between items-center">
+        <span class="text-xl font-bold text-neutral-800">Total</span>
+        <span class="text-2xl font-extrabold text-green-700">R$ {{ totalPrice }}</span>
+      </div>
+      <button @click="finalizePurchase"
+        class="mt-6 w-full bg-green-500 hover:bg-green-800 text-white py-3 rounded-lg font-semibold shadow transition-colors duration-200">
+        Finalizar Compra
+      </button>
+    </div>
+
+    <!-- Loading Modal -->
+    <div v-if="loading"
+      class="fixed inset-1 flex flex-col items-center justify-center rounded-3xl bg-neutral-500/50 z-50 overflow-hidden">
+      <div class="bg-white p-6 rounded-xl w-80 text-center">
+        <p class="mb-3 font-semibold text-lg">Finalizando compra</p>
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div class="h-3 bg-green-400 transition-all duration-200" :style="{ width: progress + '%' }"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div v-if="success"
+      class="fixed inset-1 flex flex-col items-center justify-center rounded-3xl bg-green-600/50 z-50 overflow-hidden">
+      <div class="bg-white p-6 rounded-xl w-96 text-center space-y-2">
+        <p class="font-semibold text-lg text-green-700">Compra finalizada!</p>
+        <p class="text-base font-semibold text-lg text-gray-600">Boleto encaminhado para o seu e-mail!</p>
+        <p class="text-base text-gray-600">Obrigado, volte sempre 😉</p>
       </div>
     </div>
   </section>
@@ -139,6 +172,31 @@ const totalPrice = computed(() => {
     }, 0)
     .toFixed(2)
 })
+
+const loading = ref(false)
+const success = ref(false)
+const progress = ref(0)
+
+// Função para finalizar compra
+const finalizePurchase = () => {
+  loading.value = true
+  progress.value = 0
+
+  const interval = setInterval(() => {
+    if (progress.value < 100) {
+      progress.value += 10
+    } else {
+      clearInterval(interval)
+      loading.value = false
+      success.value = true
+      setTimeout(() => {
+        success.value = false
+        cartItems.value = [] // Limpa o carrinho
+        saveItems()
+      }, 2000)
+    }
+  }, 200)
+}
 
 onMounted(() => {
   loadSavedItems()
