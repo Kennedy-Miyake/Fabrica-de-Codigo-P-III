@@ -6,6 +6,7 @@
     <div v-else class="flex flex-col items-center gap-6">
       <h3 class="text-3xl font-bold text-neutral-800 tracking-tight mb-2">{{ product.name }}</h3>
       <!-- Imagem do Produto -->
+      <img :src="product.imageUrl" alt="">
       <p class="text-center text-neutral-500 text-lg py-4 break-all">{{ product.imageUrl }}</p>
       <!--descriçao-->
       <div class="w-full flex flex-col items-center">
