@@ -8,7 +8,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
           </svg>
         </button>
-        <h1 class="text-lg font-bold tracking-wide">BuyCode</h1>
+        <h1 class="text-lg font-bold tracking-wide">
+          <router-link to="/">BuyCode</router-link>
+        </h1>
       </div>
 
       <!-- Centro: Barra de pesquisa -->
@@ -22,11 +24,18 @@
         />
       </div>
 
-      <!-- Direita: Login + Carrinho -->
-      <div class="flex items-center gap-4 min-w-max">
-        <router-link to="/login" class="hover:text-emerald-400 transition">
-          <button class="bg-[#4facfe] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#8ce7fe] transition-colors shadow-md">
+      <!-- Direita: Login -->
+      <div class="flex items-center min-w-max">
+        <router-link to="/login" class="ml-4 transition">
+          <button class="bg-[#4facfe] text-white font-semibold py-2 px-4 rounded-3xl hover:bg-[#8ce7fe] transition-colors shadow-md">
             Login
+          </button>
+        </router-link>
+      </div>
+      <div class="flex items-center min-w-max">
+        <router-link to="/register" class="ml-4 transition">
+          <button class="bg-[#4facfe] text-white font-semibold py-2 px-4 rounded-3xl  hover:bg-[#8ce7fe] transition-colors shadow-md">
+            Regiter
           </button>
         </router-link>
         <router-link to="/cart" class="hover:text-emerald-400 transition">
