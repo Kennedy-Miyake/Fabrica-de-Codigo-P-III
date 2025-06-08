@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white/90 w-[300px] rounded-xl shadow-lg p-6">
+  <div class="bg-white/90 w-[350px] rounded-xl shadow-lg p-8">
     <div class="flex flex-col items-center gap-4">
       <h3 class="font-semibold text-lg text-gray-800">{{ company.name }}</h3>
       <p class="text-xl font-bold text-green-600">R$ {{ company.price?.toFixed(2) }}</p>
@@ -13,6 +13,7 @@
           companyName: company.name,
           productName: product.name,
           price: company.price,
+          quantity: 1,
           stock: company.stock,
           imageUrl: product.imageUrl
         }

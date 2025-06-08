@@ -1,13 +1,22 @@
-import axios from 'axios'
-
-const API_URL = 'http://localhost:8080/api/v1'
+import api from './api'
 
 // Busca produto específico em uma empresa
 export const getProductInCompany = async (companyId, productId) => {
-    return axios.get(`${API_URL}/company/${companyId}/product/${productId}`)
+    try {
+        const response = await api.get(`/company/${companyId}/product/${productId}`)
+        return response
+    } catch (error) {
+        console.error('Erro ao buscar produto:', error)
+        return { data: null }
+    }
 }
 
 // Busca todas as empresas
 export const getAllCompanies = async () => {
-    return axios.get(`${API_URL}/companies`)
+    try {
+        return await api.get('/companies')
+    } catch (error) {
+        console.error('Erro ao buscar empresas:', error)
+        throw error
+    }
 }

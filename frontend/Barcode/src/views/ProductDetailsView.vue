@@ -54,7 +54,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
 import { getProductInCompany, getAllCompanies } from "../assets/services/productCompanies.js"
-import { PostOrderItem } from '../assets/services/cart.js'
+import { cartService } from '../assets/services/cart'
 import CompanyCard from "../components/CompanyCardComponent.vue";
 
 const route = useRoute()
@@ -80,8 +80,10 @@ const handleAddToCart = async () => {
 
   cartLoading.value = true
   try {
-    const companyId = productCompanies.value[0].id
-    await PostOrderItem(companyId, product.value.id, 1)
+    await cartService.addToCart({
+      productCompanyId: productCompanies.value[0].productCompanyId,
+      quantity: 1
+    })
     cartMessage.value = 'Produto adicionado ao carrinho!'
     cartMessageType.value = 'text-green-500'
   } catch (err) {
@@ -115,45 +117,35 @@ const fetchProduct = async () => {
 }
 
 const fetchProductCompanies = async (productId) => {
-  if (!productId) {
-    console.error('ID do produto não fornecido')
-    return
-  }
+  if (!productId) return
 
   companiesLoading.value = true
   try {
-    // Busca todas as empresas
     const { data: companies } = await getAllCompanies()
-    console.log('Empresas encontradas:', companies)
 
-    // Array para armazenar as promessas
-    const companyPromises = companies.map(async (company) => {
+    const promises = companies.map(async (company) => {
       try {
-        const { data: productCompany } = await getProductInCompany(company.companyId, productId)
-        if (productCompany) {
+        const response = await getProductInCompany(company.companyId, productId)
+        if (response?.data) {
           return {
             ...company,
-            price: productCompany.price,
-            stock: productCompany.stock,
-            productCompanyId: productCompany.productCompanyId
+            price: response.data.price,
+            stock: response.data.stock,
+            productCompanyId: response.data.productCompanyId
           }
         }
       } catch (err) {
-        if (err.response?.status !== 404) {
-          console.error(`Erro ao verificar produto na empresa ${company.companyId}:`, err)
-        }
+        console.log(`Produto não encontrado na empresa ${company.name}`)
         return null
       }
     })
 
-    // Aguarda todos os dados e filtra os resultados nulos
-    const results = await Promise.all(companyPromises)
-    productCompanies.value = results.filter(company => company !== null)
-    console.log('Empresas com o produto:', productCompanies.value)
+    const results = await Promise.all(promises)
+    productCompanies.value = results.filter(Boolean)
 
   } catch (error) {
-    console.error('Erro ao buscar empresas:', error)
-    error.value = 'Não foi possível carregar as empresas'
+    console.error('Erro ao carregar empresas:', error)
+    error.value = 'Erro ao carregar as empresas'
   } finally {
     companiesLoading.value = false
   }
