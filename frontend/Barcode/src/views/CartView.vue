@@ -128,6 +128,18 @@ const addNewItem = (newItem) => {
   saveItems()
 }
 
+// Calcula o preço total
+const totalPrice = computed(() => {
+  return cartItems.value
+    .reduce((total, item) => {
+      // Garante que price e quantity são números
+      const price = Number(item.price) || 0
+      const quantity = Number(item.quantity) || 0
+      return total + (price * quantity)
+    }, 0)
+    .toFixed(2)
+})
+
 onMounted(() => {
   loadSavedItems()
 

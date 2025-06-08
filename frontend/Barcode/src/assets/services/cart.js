@@ -58,11 +58,11 @@ export const cartService = {
         return api.delete(`/orderitem/${itemId}`)
     },
 
-    // Atualizar quantidade - Mudando de PATCH para PUT
+    // Atualizar quantidade 
     updateQuantity(itemId, quantity) {
         return api.put(`/orderitem/${itemId}`, {
             quantity: quantity,
-            orderId: 1 // ID temporário do pedido
+            orderId: 1 
         })
     }
 }
