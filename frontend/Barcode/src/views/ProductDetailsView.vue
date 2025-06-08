@@ -6,8 +6,8 @@
     <div v-else class="flex flex-col items-center gap-6">
       <h3 class="text-3xl font-bold text-neutral-800 tracking-tight mb-2">{{ product.name }}</h3>
       <!-- Imagem do Produto -->
-      <img :src= product.imageUrl alt="">
-      <p> class="text-center text-neutral-500 text-lg py-4 break-all">{{ product.imageUrl }}</p>
+      <img :src="product.imageUrl" alt="">
+      <p class="text-center text-neutral-500 text-lg py-4 break-all">{{ product.imageUrl }}</p>
       <!--descriçao-->
       <div class="w-full flex flex-col items-center">
         <h4 class="text-lg font-semibold text-neutral-700 mb-1">Descrição</h4>
@@ -34,7 +34,6 @@ import { useRoute } from 'vue-router'
 import { getProductByBarcode } from '../assets/services/products.js'
 import { getProductCompaniesByBarcode } from "../assets/services/productCompanies.js";
 import CompanyCard from "../components/CompanyCardComponent.vue";
-import { PostOrderItem } from '../assets/services/cart.js';
 
 const route = useRoute()
 
@@ -42,9 +41,6 @@ const product = ref(null)
 const productCompanies = ref(null)
 const loading = ref(true)
 const error = ref('')
-
-
-
 
 const fetchProduct = async() => {
   try {
@@ -70,9 +66,6 @@ const fetchProductCompanies = async() => {
     loading.value = false
   }
 }
-const addToCart = async (company) => {
-  tr
-} 
 
 onMounted(() => {
   fetchProduct()
