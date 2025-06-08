@@ -1,6 +1,7 @@
 import Quagga from 'quagga'
+import { useRouter } from 'vue-router'
 
-export default function initBarcodeScanner() {
+export default function initBarcodeScanner(router) { // Recebe router como parâmetro
   Quagga.init({
     inputStream: {
       type: 'LiveStream',
@@ -12,7 +13,7 @@ export default function initBarcodeScanner() {
       target: document.querySelector('#camera')
     },
     locator: {
-      patchSize: 'medium', 
+      patchSize: 'medium',
       halfSample: true
     },
     numOfWorkers: navigator.hardwareConcurrency || 4,
@@ -34,14 +35,16 @@ export default function initBarcodeScanner() {
   Quagga.onDetected((result) => {
     const code = result.codeResult.code
 
-    //função onde verifica se codigo foi lido
     if (code !== lastCode) {
       lastCode = code
       const resultado = document.getElementById('resultado')
       if (resultado) resultado.textContent = `✅ Código lido: ${code}`
 
-      //passando barcode na url 
-      window.location.href = `/product?code=${code}`
+      // Corrigindo o redirecionamento para usar o endpoint correto
+      router.push(`/products/${code}`)
+
+      // Parar o scanner após detecção bem sucedida
+      Quagga.stop()
     }
   })
 }
