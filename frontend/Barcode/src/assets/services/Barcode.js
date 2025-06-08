@@ -39,11 +39,7 @@ export default function initBarcodeScanner(router) { // Recebe router como parâ
       lastCode = code
       const resultado = document.getElementById('resultado')
       if (resultado) resultado.textContent = `✅ Código lido: ${code}`
-
-      // Corrigindo o redirecionamento para usar o endpoint correto
       router.push(`/products/${code}`)
-
-      // Parar o scanner após detecção bem sucedida
       Quagga.stop()
     }
   })
