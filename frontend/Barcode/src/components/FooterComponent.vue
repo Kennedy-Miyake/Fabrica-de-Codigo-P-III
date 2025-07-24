@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-[#0a1931] w-full text-white py-6 px-2 text-center relative">
+  <footer class="bg-[#080c1c] w-full text-white py-6 px-2 text-center relative">
     <div class="flex flex-col items-center space-y-2">
     <p class="text-sm font-bold">{{ new Date().getFullYear() }} BuyCode</p>
     <nav class="flex space-x-3 text-xs">
@@ -11,7 +11,7 @@
     </nav>
     <div class="flex space-x-4 mt-2">
         <a href="https://www.instagram.com/oficialtft/" target="_blank" rel="noopener" aria-label="Instagram">
-            <img src="../assets/Services/img/icons8-instagram.svg" alt="Instagram" class="w-12 h-12">
+            <img src="../assets/img/icons8-instagram.svg" alt="Instagram" class="w-12 h-12">
         </a>
     </div>
       <p class="text-xs italic">TECNOLOGIA COM PROPOSITO.</p>

@@ -1,9 +1,19 @@
 <script setup>
-import { onMounted } from 'vue'
-import initBarcodeScanner from '../assets/Services/Barcode.js'
+import { onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import initBarcodeScanner from '../assets/services/Barcode.js'
+
+const router = useRouter()
 
 onMounted(() => {
-  initBarcodeScanner()
+  initBarcodeScanner(router)
+})
+
+onUnmounted(() => {
+  // Desligando a camera depois de ler o codigo de barra 
+  if (window.Quagga) {
+    window.Quagga.stop()
+  }
 })
 </script>
 

@@ -1,4 +1,6 @@
 // ReSharper disable all
+
+using BarCode.Domain.DTO;
 using BarCode.Infrastructure.Context;
 using BarCode.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -6,62 +8,118 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarCodeAPI.Controllers;
 
-[Route("[controller]")]
+[Route("api/v1")]
 [ApiController]
 public class OrdersController : ControllerBase {
     private readonly AppDbContext _context;
+    private readonly ILogger<OrdersController> _logger;
 
-    public OrdersController(AppDbContext context) {
+    public OrdersController(AppDbContext context, ILogger<OrdersController> logger) {
         _context = context;
+        _logger = logger;
     }
 
-    [HttpGet]
-    public ActionResult<IEnumerable<Order>> Get() {
-        var orders = _context.Orders.AsNoTracking().Take(10).ToList();
-        if(orders is null)
-            return NotFound("Pedidos não encontrados...");
-        return orders;
+    [HttpGet("orders")]
+    public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders() {
+        var orders = await _context.Orders.AsNoTracking().Take(10).ToListAsync();
+        if (orders is null) {
+            _logger.LogWarning($"Pedidos não encontrados.");
+            return NotFound($"Pedidos não encontrados.");
+        }
+
+        var orderDTOs = orders.Select(order => new OrderDTO(
+                                                         order.ClientId,
+                                                         order.DeliveryAddress,
+                                                         order.OrderDate,
+                                                         order.OrderTotal,
+                                                         order.ClientId)).ToList();
+        
+        return Ok(orderDTOs);
     }
 
-    [HttpGet("{id:int}", Name = "GetOrder")]
-    public ActionResult<Order> Get(int id) {
-        var order = _context.Orders.AsNoTracking().FirstOrDefault(p => p.OrderId == id);
-        if(order is null)
-            return NotFound("Pedido não encontrado.");
-        return order;
+    [HttpGet("order/{id:int}", Name = "GetOrder")]
+    public async Task<ActionResult<Order>> GetOrder(int id) {
+        var order = await _context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == id);
+        if (order is null) {
+            _logger.LogWarning($"Pedido com ID {id} não encontrado.");
+            return NotFound($"Pedido com ID {id} não encontrado.");
+        }
+        
+        var orderDTO = new OrderDTO(
+                                    order.OrderId,
+                                    order.DeliveryAddress,
+                                    order.OrderDate,
+                                    order.OrderTotal,
+                                    order.ClientId);
+
+        return Ok(orderDTO);
     }
 
-    [HttpPost]
-    public ActionResult<Order> Post(Order order) {
-        if (order is null)
-            return BadRequest();
+    [HttpPost("order")]
+    public async Task<ActionResult<Order>> CreateOrder(OrderDTO dto) {
+        if (dto is null) {
+            _logger.LogWarning($"Dados inválidos");           
+            return BadRequest($"Dados inválidos.");
+        }
+
+        var order = new Order {
+            DeliveryAddress = dto.DeliveryAddress,
+            OrderDate = dto.OrderDate,
+            OrderTotal = dto.OrderTotal,
+            ClientId = dto.ClientId
+        };
         
         _context.Orders.Add(order);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return CreatedAtRoute("GetOrder", new { id = order.OrderId }, order);
+        return CreatedAtRoute(nameof(GetOrder), new { id = order.OrderId }, dto);
     }
 
-    [HttpPut("{id:int}")]
-    public ActionResult<Order> Put(int id, Order order) {
-        if (id != order.OrderId)
-            return BadRequest();
+    [HttpPut("order/{id:int}")]
+    public async Task<ActionResult<Order>> UpdateOrder(int id, OrderDTO dto) {
+        if (id != dto.OrderId) {
+            _logger.LogWarning($"Dados inválidos.");
+            return BadRequest($"Dados inválidos.");
+        }
+        
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+        
+        order.DeliveryAddress = dto.DeliveryAddress;
+        order.OrderDate = dto.OrderDate;
+        order.OrderTotal = dto.OrderTotal;
+        order.ClientId = dto.ClientId;
 
         _context.Entry(order).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(order);
+        var orderDTO = new OrderDTO(
+            order.OrderId,
+            order.DeliveryAddress,
+            order.OrderDate,
+            order.OrderTotal,
+            order.ClientId);
+        
+        return Ok(orderDTO);
     }
 
-    [HttpDelete("{id:int}")]
-    public ActionResult<Order> Delete(int id) {
-        var order = _context.Orders.FirstOrDefault(p => p.OrderId == id);
-        if (order is null)
-            return NotFound("Pedido não encontrado.");
+    [HttpDelete("order/{id:int}")]
+    public async Task<ActionResult<Order>> DeleteOrder(int id) {
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+        if (order is null) {
+            _logger.LogWarning($"Pedido não encontrado.");
+            return NotFound($"Pedido não encontrado.");
+        }
+        
+        var orderDTO = new OrderDTO(
+            order.OrderId,
+            order.DeliveryAddress,
+            order.OrderDate,
+            order.OrderTotal,
+            order.ClientId);
         
         _context.Orders.Remove(order);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        return Ok(order);
+        return Ok(orderDTO);
     }
 }
